@@ -1,6 +1,6 @@
 # The script provides studies about API requests.
 
-## Raw Data from Police Department Incident Reports
+## Raw data from Police Department Incident Reports
 
 > more details in: https://dev.socrata.com/foundry/data.sfgov.org/wg3w-h783
 
