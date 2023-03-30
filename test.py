@@ -13,20 +13,21 @@ def fetch_next_day(days):
     return next_day
 
 def extract_list_of_dates(next_day):
-    list_of_dates = [fetch_next_day(i) for i in range(delta_date.days+1)]
+    list = fetch_next_day(next_day)
+    list_of_dates = [list[i] for i in range(delta_date.days+1)]
     return list_of_dates
             
 def extract_data(list_of_dates):
     client = Socrata(domain="data.sfgov.org",
-                 app_token="Ax7ks1Cmr0r6TEssy44yJj4ts",
-                 username="2osd2wzioj43v7iymmfnt74x3",
-                 password="4x7f0iwwas0wppj8szt7n6ddln8ni1s52tn17q492ju0s5pku1")
+                 app_token="",
+                 username="",
+                 password="")
     query = f'select count(*) where incident_datetime < "{[list_of_dates[i] for i in range(list_of_dates)]}]"'
     # requests = client.get("wg3w-h783", query=[])
     # results = client.get("wg3w-h783", query=query)
     return query
 
-print(extract_data())
+print(extract_data(list_of_dates=extract_list_of_dates(fetch_next_day())))
 # print(fetch_next_day(1), delta_date.days+1, next_day, type(next_day))
 
 # print(initial_date.isoformat(), next_day.isoformat())
