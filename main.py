@@ -14,9 +14,9 @@ from datetime import datetime
 
 # Example authenticated client (needed for non-public datasets):
 client = Socrata(domain="data.sfgov.org",
-                 app_token="Ax7ks1Cmr0r6TEssy44yJj4ts",
-                 username="2osd2wzioj43v7iymmfnt74x3",
-                 password="4x7f0iwwas0wppj8szt7n6ddln8ni1s52tn17q492ju0s5pku1")
+                 app_token="",
+                 username="",
+                 password="")
 
 initial_date = datetime(year=2018, month=1, day=1, hour=23, minute=59, second=59, microsecond=999999)
 
