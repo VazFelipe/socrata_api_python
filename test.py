@@ -4,32 +4,33 @@ import pandas as pd
 import pandas as pd
 from sodapy import Socrata
 import json
-from time import perf_counter
+import time
+import ast
+import re
 
 # context manager opens the config.json and close it as soon as the end of the process
 with open('config.json', 'r') as f:
     config = json.load(f)
 
-def daterange(start_date, end_date):
-    for n in range(int((end_date - start_date).days)+1):
-        yield start_date + timedelta(n)
-
 initial_date = date(2022,1,1)
-today_date = date(2022,1,10)
+end_date = date(2022,1,10)
+number_of_days_for_batch = 2
 
-def extract_list_of_dates():
-    for single_date in daterange(initial_date, today_date):
-        yield (datetime(year=single_date.year,month=single_date.month,day=single_date.day) + timedelta(hours=23,minutes=59,seconds=59,microseconds=999999)).isoformat()
+def extract_list_of_dates(start_date, end_date, number_of_days_for_batch):
+    list_of_dates=[]
+    max_number_of_days_for_processing = int((end_date - start_date).days)+1
+    for day in range(max_number_of_days_for_processing):
+        if day < number_of_days_for_batch:
+            list_of_dates.append((datetime(year=start_date.year,month=start_date.month,day=start_date.day) + timedelta(day, hours=23,minutes=59,seconds=59,microseconds=999999)).isoformat())
+    return list_of_dates
             
-def extract_data():
+def extract_data(start_date, end_date, number_of_days_for_batch):
     output = []
-    for dates in extract_list_of_dates():
-
-        days_for_processing = (today_date - initial_date).days+1
+    for dates in extract_list_of_dates(start_date=start_date, end_date=end_date, number_of_days_for_batch=number_of_days_for_batch):
 
         yesterday = datetime.strptime(dates,"%Y-%m-%dT%H:%M:%S.%f") - timedelta(1)
         
-        start_counter, start_time = perf_counter(), datetime.now()
+        start_counter, start_time = time.perf_counter(), datetime.now()
         
         client = Socrata(domain="data.sfgov.org",
                     app_token=config.get('credentials').get('app_token'),
@@ -37,22 +38,25 @@ def extract_data():
                     password=config.get('credentials').get('password'))
         
         
-        results = client.get("wg3w-h783", query=f'select date_trunc_ymd(incident_datetime) AS incident_datetime, count(incident_datetime) AS row_count where incident_datetime between "{yesterday.isoformat()}" and "{dates}" group by date_trunc_ymd(incident_datetime) order by incident_datetime')
-        results_df = pd.DataFrame.from_records(results)
+        results = client.get("wg3w-h783", content_type="json", query=f'select date_trunc_ymd(incident_datetime) AS incident_datetime, count(incident_datetime) AS row_count where incident_datetime between "{yesterday.isoformat()}" and "{dates}" group by date_trunc_ymd(incident_datetime) order by incident_datetime')
         
-        stop_counter, stop_time = perf_counter(), datetime.now()
-        elapsed_seconds = round(stop_counter - start_counter, 4)
+        # p = re.compile('(?<!\\\\)\'')
+        # results = p.sub('\"', str(results))
         
-        output.append(results_df) 
+        # results = str(results).replace("'", '"')
+        # results = results.replace("'[", "").replace("]'", "")
         
-        results_df['start_time'] = str(start_time)
-        results_df['stop_time'] = str(stop_time)
-        results_df['elapsed_seconds'] =  str(elapsed_seconds)
-        
-        results_df = pd.concat(output)
+        # output.append(results)
 
-        f_csv = results_df.to_csv(f'dataset_wg3w-h783_socrata_{str(stop_time.strftime("%Y%m%d-%H%M%S"))}.csv', encoding='utf-8', index=False)
-    return results_df, days_for_processing, 
+        # stop_counter, stop_time = time.perf_counter(), datetime.now()
+        # elapsed_seconds = round(stop_counter - start_counter, 4)
+        # # parsed_json = ast.literal_eval(str(output))
+        json_obj = json.loads(results)
+        json_obj.update(results)
+    return json_obj
+data = extract_data(start_date=initial_date, end_date=end_date, number_of_days_for_batch=number_of_days_for_batch)
 
+# json_obj = json.dumps(data, indent=4, sort_keys=True)
 
-print(extract_data())
+# print(data["incident_datetime"])
+print(data)
