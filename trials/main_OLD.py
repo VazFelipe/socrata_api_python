@@ -29,7 +29,7 @@ query = f'select count(*) where incident_datetime < "{initial_date.isoformat()}"
 
 # First 2000 results, returned as JSON from API / converted to Python list of
 # dictionaries by sodapy.
-results = client.get("wg3w-h783", content_type="CSV", select="incident_datetime", where='incident_datetime < "2018-01-02T00:00:00.000"')
+results = client.get("wg3w-h783", content_type="json", select="incident_datetime", where='incident_datetime < "2018-01-02T00:00:00.000"')
 
 #select="count(*)", where="incident_datetime <= '2018-01-02T23:59:59'")  # 'select incident_number where incident_number = "210061105"') #limit=10, offset=0, order="incident_id") # query=query) #"SELECT max(incident_datetime)") #, 
 
