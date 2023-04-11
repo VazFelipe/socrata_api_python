@@ -7,6 +7,7 @@ import json
 import time
 import ast
 import re
+import os
 
 # context manager opens the config.json and close it as soon as the end of the process
 with open('config.json', 'r') as f:
@@ -60,3 +61,11 @@ data = extract_data(start_date=initial_date, end_date=end_date, number_of_days_f
 
 # print(data["incident_datetime"])
 print(data)
+
+# c:\Users\144553\Downloads
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# c:\Users\144553\Downloads\projectTest
+ROOT_DIR_2 = os.path.abspath(os.curdir)
+
+print(ROOT_DIR, ROOT_DIR_2)

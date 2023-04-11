@@ -10,4 +10,4 @@ r = requests.post('https://httpbin.org/post', data=payload, verify=False)
 
 r_dict = r.json()
 
-print(r_dict['form'])
+print(r_dict)

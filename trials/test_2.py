@@ -38,10 +38,11 @@ elapsed = str(stop_count - start_count)
 
 # print(unix)
 # print(unix_seconds)
-# print(unix_milliseconds)
-# print(unix_microseconds)
-# print(unix_nanoseconds)
-# print(pd.Timestamp(unix_nanoseconds))
+print(unix_milliseconds)
+print(unix_microseconds)
+print(unix_nanoseconds)
+print(pd.Timestamp(unix_nanoseconds))
+print(time.time_ns())
 # print(end_of_processing)
 # print(end_of_processing_unix)
 # print(teste_4)
@@ -68,7 +69,7 @@ def extract_list_of_dates(start_date, number_of_days):
             if day <= number_of_days-1:
                 list_of_dates.append((datetime(year=start_date.year,month=start_date.month,day=start_date.day) + timedelta(day, hours=23,minutes=59,seconds=59,microseconds=999999)).isoformat())
     return list_of_dates
-print(extract_list_of_dates(start_date=start_date, number_of_days=2))
+print(extract_list_of_dates(start_date=start_date, number_of_days=3))
 # for i in range(1,date_range+1):
 #     print(i)
 # print(date_range))
