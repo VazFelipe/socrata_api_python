@@ -55,12 +55,12 @@ def extract_data(start_date, end_date, number_of_days_for_batch):
         json_obj = json.loads(results)
         json_obj.update(results)
     return json_obj
-data = extract_data(start_date=initial_date, end_date=end_date, number_of_days_for_batch=number_of_days_for_batch)
+# data = extract_data(start_date=initial_date, end_date=end_date, number_of_days_for_batch=number_of_days_for_batch)
 
 # json_obj = json.dumps(data, indent=4, sort_keys=True)
 
 # print(data["incident_datetime"])
-print(data)
+# print(data)
 
 # c:\Users\144553\Downloads
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -68,4 +68,12 @@ ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # c:\Users\144553\Downloads\projectTest
 ROOT_DIR_2 = os.path.abspath(os.curdir)
 
-print(ROOT_DIR, ROOT_DIR_2)
+# print(ROOT_DIR, ROOT_DIR_2)
+
+list = [102, 232, 424]
+d = {}
+
+for a, b in enumerate(list):
+    d[a] = b
+
+print(d)
