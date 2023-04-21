@@ -12,10 +12,10 @@ from google.cloud import storage
 with open('config.json', 'r') as f:
     config = json.load(f)
 
-start_date = date(2018, 1, 5) 
+start_date = date(2018, 1, 9) 
 end_date = date.today()
 day_range = int((end_date - start_date).days)+1
-number_of_days = 3
+number_of_days = 1
 bucket_name = "socrata-vaz-data"
 
 def storage_client():
@@ -37,24 +37,57 @@ def bucket_blob(bucket_name, blob_name):
     return bucket, blob
 
 def extract_list_of_dates(start_date, number_of_days, bucket_name):
-    """ Define """
+    """ Return a list of dates from start_date to end_date. 
+        
+        If the bucket has N blobs then gets from fetch_max_date_from_bucket() 
+        the max_date from the name of blob and return the list_of_dates from that max_date  
+    """
+
     list_of_dates=[]
+    if number_of_days == 1:
+        number_of_days = 2
+    
     for day in range(day_range):
         if day <= day_range:
             if day <= number_of_days-1:
                 list_of_dates.append((datetime(year=start_date.year,month=start_date.month,day=start_date.day) + timedelta(day, hours=23,minutes=59,seconds=59,microseconds=999999)).isoformat())
-                if fetch_max_date_from_bucket(bucket_name):
-                    list_of_dates = [date for date in list_of_dates if date > fetch_max_date_from_bucket()]
-    return list_of_dates
+                if number_of_days == 0:
+                    list_of_dates = []
+    # last_day_list_of_dates = str(list_of_dates[-1])[:10]
+    # list_of_dates_before = list_of_dates
+    # date_in_bucket = fetch_max_date_from_bucket(bucket_name)
+    if list_of_dates == []:
+        list_of_dates = []
+
+    # if the bucket has no blobs return the list_of_dates
+    if fetch_max_date_from_bucket(bucket_name) == {}:
+        list_of_dates
+    
+    # if the bucket has blobs and the max_date is equal to the last_day of the range return an empty list_of_dates
+    if list_of_dates != [] and fetch_max_date_from_bucket(bucket_name) == str(list_of_dates[-1])[:10]:
+        list_of_dates = []
+
+    # if the bucket has blobs and the max_date is less than the last day of the range return the list_of_dates from that
+    else:
+        list_of_dates = [dates for dates in list_of_dates if dates > fetch_max_date_from_bucket(bucket_name)]
+        list_of_dates = list_of_dates[1:]
+    
+    count_of_dates = len(list_of_dates)
+
+    return list_of_dates, count_of_dates #, last_day_list_of_dates, date_in_bucket
 
 def extract_load_data(bucket_name, start_date, number_of_days):
     """ Define """
-    if number_of_days == 0:
+    if extract_list_of_dates(start_date, number_of_days, bucket_name)[0] == [] and number_of_days == 0:
         message = "Require the number_of_days greater than or equal to 1 to extract data"
-    else: 
-        for date in extract_list_of_dates(start_date, number_of_days, bucket_name):
-            
-            params = {'$limit': 10,
+        # pass
+    if extract_list_of_dates(start_date, number_of_days, bucket_name)[0] == [] and number_of_days != 0:
+        message = f"The max_incident_date in the bucket is {fetch_max_date_from_bucket(bucket_name)}. There's already this range of dates {number_of_days}, from {start_date} to {start_date + timedelta(days=number_of_days-1)}. Try a start_date greater than this."
+    else:
+        count_of_files_loaded = 0 
+        for date in extract_list_of_dates(start_date, number_of_days, bucket_name)[0]:
+
+            params = {#'$limit': 10,
                     '$where': 'incident_datetime <=' + "'" + str(date) + "'"
             }
                 
@@ -72,7 +105,8 @@ def extract_load_data(bucket_name, start_date, number_of_days):
             
             with blob.open("w") as write_file:
                 json.dump(r.json(), write_file, indent=4)
-            message = f'{number_of_days} day(s) loaded in the {bucket_name} bucket'
+            count_of_files_loaded += 1
+            message = f'{count_of_files_loaded} day(s) loaded in the {bucket_name} bucket'
     
     return message
 
@@ -95,6 +129,6 @@ def fetch_max_date_from_bucket(bucket_name):
 
     return blob_dict
 
-# print(extract_load_data(bucket_name=bucket_name, start_date=start_date, number_of_days=3))
-print(fetch_max_date_from_bucket(bucket_name))
-# print(extract_list_of_dates(start_date, 10, bucket_name))
+print(f"The max date in the bucket is {fetch_max_date_from_bucket(bucket_name)}")
+print(f"The list_of_dates to load into the bucket is {extract_list_of_dates(start_date,number_of_days=number_of_days,bucket_name=bucket_name)}")
+print(extract_load_data(bucket_name=bucket_name, start_date=start_date, number_of_days=number_of_days))
