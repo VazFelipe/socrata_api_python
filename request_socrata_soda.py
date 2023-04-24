@@ -93,7 +93,7 @@ def extract_load_data(bucket_name, start_date, number_of_days):
                 
             r = requests.get(config.get('api').get('domain').get('url') + config.get('api').get('dataset').get('san_francisco_data') + '.json', 
                             params=params, 
-                            headers=config.get('headers')
+                            headers=config.config.get('api').get('headers')
                             )
             if r.status_code != 200:
                 raise RuntimeError('Can''t retrieve latest timestamp.' + r.text)
