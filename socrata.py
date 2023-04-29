@@ -20,4 +20,4 @@ class Socrata:
         return response
 
 if __name__ == '__main__':
-    Socrata().api_connection()
+    Socrata()

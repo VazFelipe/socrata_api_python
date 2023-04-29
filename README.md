@@ -64,3 +64,26 @@
 
 > in this phase I'll study and implement classes to organize and make this code more readable, reusable and scalable :::**TO DO**:::
 
+> My thoughts about the classes diagram looks like:
+
+```
+api_socrata
+	connection
+		logs
+	latency and throughput
+	
+cloud_storage
+	connection
+		logs
+	latency and throughput
+
+data_extraction_loading
+	params = start_date, end_date, bucket_name,  
+	default = from last date in the bucket
+		first load = from the minimal incident_datetime in the api data
+	reprocess = from the user range 
+		mode = batch or full
+			logs
+```
+
+
