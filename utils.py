@@ -1,0 +1,16 @@
+from datetime import timedelta
+from dataclasses import dataclass
+
+@dataclass
+class Utils:
+    args_dict: dict
+
+    def modify_entry_params(self):
+            for key, value in self.args_dict.items():
+                if key.endswith("date"):
+                    args_dict_updated = {key: (value + timedelta(days=0, hours=23, minutes=59, seconds=59, microseconds=999999)).isoformat()}
+                    self.args_dict.update(args_dict_updated)
+            return self.args_dict
+
+if __name__ == '__main__':
+    Utils
