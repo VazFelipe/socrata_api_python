@@ -26,8 +26,11 @@ get_url = config.get('api').get('domain').get('url') + config.get('api').get('da
 get_headers = config.get('api').get('headers')
 params = config.get('api').get('params')
 
+# new_params = Params(params,start_date).specify_params()
 connection = Socrata(get_url, get_headers, params, start_date).api_connection()
 
-print(connection)
+# arguments = Params(params,start_date).specify_params()
+
+print(connection, start_date, type(start_date))
 
 

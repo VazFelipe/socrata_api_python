@@ -13,4 +13,4 @@ class Utils:
             return self.args_dict
 
 if __name__ == '__main__':
-    Utils
+    Utils()

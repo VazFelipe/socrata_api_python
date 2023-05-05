@@ -1,0 +1,3 @@
+{
+    "args": ["--mode=REFRESH", "start_date=2022-05-02", "--end_date=2022-05-04"]
+}
