@@ -1,8 +1,11 @@
 import argparse
 from sys import argv
-from datetime import date, datetime, timedelta, time
+from datetime import date, datetime
 from socrata import *
 from utils import *
+
+with open('config.json', 'r') as f:
+    config = json.load(f)
 
 parser = argparse.ArgumentParser(description="Extract the dataset named Police Department Incident Reports: 2018 to Present \
                                  from The City and Condado of San Francisco. Socrata Open Data API have been used to programmatically \
@@ -15,22 +18,13 @@ parser.add_argument("-e", "--end_date", type=datetime.fromisoformat, default=dat
 args = vars(parser.parse_args())
 
 args_converted = Utils(args).modify_entry_params()
-
 start_date = args_converted["start_date"]
 end_date = args_converted["end_date"]
-
-with open('config.json', 'r') as f:
-    config = json.load(f)
 
 get_url = config.get('api').get('domain').get('url') + config.get('api').get('dataset').get('san_francisco_data') + '.json'
 get_headers = config.get('api').get('headers')
 params = config.get('api').get('params')
 
-# new_params = Params(params,start_date).specify_params()
-connection = Socrata(get_url, get_headers, params, start_date).api_connection()
-
-# arguments = Params(params,start_date).specify_params()
-
-print(connection, start_date, type(start_date))
-
+connection = Socrata(url=get_url, headers=get_headers, parameters=params, start_date=start_date).api_connection()
+print(json.dumps(connection.json(), indent=4))
 
