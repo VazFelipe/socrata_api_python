@@ -67,11 +67,17 @@
 > My thoughts about the classes diagram looks like:
 
 ```
-api_socrata
-	connection
+socrata.py
+    Params
+    Socrata
+	    api_connection()
 		logs
 	latency and throughput
-	
+
+utils.py
+    Utils
+        modify_entry_params()
+
 cloud_storage
 	connection
 		logs
