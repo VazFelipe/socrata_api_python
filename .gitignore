@@ -1,5 +1,5 @@
 .gitignore
 config.json
 venv/
-./__pychache__/
+__pychache__/
 *.log
