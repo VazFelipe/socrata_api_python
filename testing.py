@@ -1,6 +1,7 @@
 import json
 from datetime import datetime, date, timedelta
 from utils import *
+import logging
 
 with open('config.json', 'r') as f:
     config = json.load(f)
@@ -23,4 +24,18 @@ for key, value in params.items():
 #         params.update(args_dict_updated)
 
 # new_params = Utils(params).modify_entry_params()
-print(params["$where"])
+# print(params["$where"])
+
+levels ={
+    "exception": logging.exception,
+    "info": logging.info,
+    "warning": logging.warning,
+    "error": logging.error,
+    "debug": logging.debug,
+    "critical": logging.critical
+}
+
+
+
+for item in levels.keys():
+    print(type(levels[item]))

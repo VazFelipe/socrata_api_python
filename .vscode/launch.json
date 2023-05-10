@@ -9,8 +9,8 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "console": "integratedTerminal",
-             "args": ["--mode", "REFRESH", "--start_date", "2018-01-01", "--end_date", "2019-01-02"]
+            "console": "integratedTerminal"
+            //  "args": ["--mode", "REFRESH", "--start_date", "2018-01-01", "--end_date", "2019-01-02"]
         }
     ]
 }
