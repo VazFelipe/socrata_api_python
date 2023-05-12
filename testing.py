@@ -37,5 +37,19 @@ levels ={
 
 
 
-for item in levels.keys():
-    print(type(levels[item]))
+# for item in levels.keys():
+#     print(type(levels[item]))
+# level1 = 'INFO'
+# msg = 'hello'
+# print(getattr(logging, level1))
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    filename='./my_log.log', 
+    filemode='w'
+    )
+logging.info('starting')
+var = 'my string'
+print(var)
+logging.info('ending')
