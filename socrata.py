@@ -1,6 +1,8 @@
-import utils
 import requests
+import logging
 from dataclasses import dataclass
+
+logger = logging.getLogger(__name__)
 
 @dataclass
 class Params:
@@ -8,17 +10,17 @@ class Params:
     start_date: str
 
     def __post_init__(self):   
-        my_log = utils.Log().logging.getLogger(__name__)
+
         for key, value in self.parameters.items():
-                my_log.debug("Params Socrata API: {0}".format(key, value))
+
                 if key.startswith("$where"):
-                    my_log.debug("Params Socrata API: {0}".format(key))
+
                     params_updated = {key: value + " <= '" + self.start_date + "'"}
-                    my_log.debug("Params Socrata API: {0}".format(params_updated))
+
                     self.parameters.update(params_updated)  
 
-        my_log.debug("Params Socrata API: {0}".format(self.parameters))
-
+        logger.info('From __post_init__ the parameters: {}'.format(self.parameters), exc_info=True)
+        
         return self.parameters
 
 @dataclass
@@ -27,9 +29,11 @@ class Socrata(Params):
     headers: dict
 
     def api_connection(self):
-        my_log = utils.Log().logging.getLogger(__name__)
+
         response = requests.get(url=self.url, headers=self.headers, params=self.parameters)
-        my_log.debug("Connection Socrata API: {0}".format(self.url, self.headers, self.parameters))
+
+        logger.info('From api_connection() the response: {}'.format(response), exc_info=True)
+        
         return response
 
 if __name__ == '__main__':

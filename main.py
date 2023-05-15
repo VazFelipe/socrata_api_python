@@ -1,9 +1,14 @@
 import json
 import argparse
+import logging.config
+import time
 from sys import argv
 from datetime import date, datetime
 from socrata import *
 from utils import *
+
+logging.config.fileConfig('logging.ini', disable_existing_loggers=False)
+logger = logging.getLogger(__name__)
 
 with open('config.json', 'r') as f:
     config = json.load(f)
@@ -27,14 +32,30 @@ def main():
     get_headers = config.get('api').get('headers')
     params = config.get('api').get('params')
 
-    connection = Socrata(url=get_url, headers=get_headers, parameters=params, start_date=start_date).api_connection()
-    print(json.dumps(connection.json(), indent=4))
+    connection_start_time = time.time()
+    connection_timeout = 1
+    day_range = int((datetime.fromisoformat(end_date) - datetime.fromisoformat(start_date)).days)+1
+    loop_counter = 0
+    
+    while day_range > loop_counter:
+        try:
+            logger.info("Starting connection on Socrata API with params: {}".format(params))
+
+            connection = Socrata(url=get_url, headers=get_headers, parameters=params, start_date=start_date).api_connection()
+            
+            # print(json.dumps(connection.json(), indent=4))
+
+            loop_counter += 1
+            break 
+        except ConnectionError:
+            if time.time() > connection_start_time + connection_timeout:
+                logger.error('Unable to get connection after {} seconds of ConnectionErrors'.format(connection_timeout))
+                raise Exception('Unable to get connection after {} seconds of ConnectionErrors'.format(connection_timeout))
+            else:
+                 logger.info('Start retry logic every {} second'.format(connection_timeout))
+                 time.sleep(1)
+        finally:
+            logger.info("Ending connection on Socrata API with response: {}".format(connection.ok))
 
 if __name__ == '__main__':
-        logging.basicConfig(
-            level=logging.DEBUG,
-            format='%(asctime)s %(name)s %(levelname)s %(message)s',
-            filename='./compiled.log',
-            filemode='w'
-         )
         main()
