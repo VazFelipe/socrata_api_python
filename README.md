@@ -67,29 +67,32 @@
 > My thoughts about the classes diagram looks like:
 
 ```
+utils.py
+    Utils
+        modify_entry_params()
+
 socrata.py
     Params
     Socrata
 	    api_connection()
 		logs
-	latency and throughput
+	:::**TO DO**::: latency and throughput?
 
-utils.py
-    Utils
-        modify_entry_params()
-
-cloud_storage
-	connection
+storage.py
+	Connection
 		logs
-	latency and throughput
+	:::**TO DO**::: latency and throughput?
 
-data_extraction_loading
-	params = start_date, end_date, bucket_name,  
-	default = from last date in the bucket
-		first load = from the minimal incident_datetime in the api data
-	reprocess = from the user range 
-		mode = batch or full
-			logs
+data_ingestion.py
+    Data
+        params = start_date, end_date, bucket_name,  
+        default = from last date in the bucket
+            first load = from the minimal incident_datetime in the api data
+        reprocess = from the user range 
+            mode = batch or full
+        ingestion()
+        logs
+    :::**TO DO**::: latency and throughput?
 ```
 
 

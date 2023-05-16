@@ -1,30 +1,21 @@
-# import logging
+import logging
 from datetime import timedelta
 from dataclasses import dataclass
+
+logger = logging.getLogger(__name__)
 
 @dataclass
 class Utils():
     args_dict: dict
 
     def modify_entry_params(self):
-            # my_log = self.log
 
-            for key, value in self.args_dict.items():
-            
-                # my_log.debug("args_dict.items(): {0}".format(key, value))
-            
-                if key.endswith("date"):
-            
-                    # my_log.debug("args_dict.items() == date: {0}".format(key))
-            
+            for key, value in self.args_dict.items():            
+                if key.endswith("date"):            
                     args_dict_updated = {key: (value + timedelta(days=0, hours=23, minutes=59, seconds=59, microseconds=999999)).isoformat()}
-            
-                    # my_log.debug("args_dict_updated: {0}".format(args_dict_updated))
                     self.args_dict.update(args_dict_updated)
 
-            # my_log.debug("args_dict_updated: {0}".format(args_dict_updated))
-            # my_log.debug("args_dict: {0}".format(self.args_dict))
-            # my_log.info("args_dict: {0}".format(self.args_dict))
+            logger.info('From {cls} the attr: {attr}'.format(cls=type(self.args_dict).__name__, attr=self.args_dict), exc_info=True)
 
             return self.args_dict
 

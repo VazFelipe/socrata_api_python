@@ -19,7 +19,7 @@ class Params:
 
                     self.parameters.update(params_updated)  
 
-        logger.info('From __post_init__ the parameters: {}'.format(self.parameters), exc_info=True)
+        logger.info('From {cls} the attr: {attr}'.format(cls=type(self.parameters).__name__, attr=self.parameters), exc_info=True)
         
         return self.parameters
 
@@ -32,7 +32,7 @@ class Socrata(Params):
 
         response = requests.get(url=self.url, headers=self.headers, params=self.parameters)
 
-        logger.info('From api_connection() the response: {}'.format(response), exc_info=True)
+        logger.info('From {cls} the attr: {attr}'.format(cls=type(response).__name__, attr=response), exc_info=True)
         
         return response
 
