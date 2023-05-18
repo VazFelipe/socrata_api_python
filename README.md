@@ -70,17 +70,22 @@
 utils.py
     Utils
         modify_entry_params()
+        logger
 
 socrata.py
     Params
     Socrata
 	    api_connection()
-		logs
+		logger
 	:::**TO DO**::: latency and throughput?
 
 storage.py
-	Connection
-		logs
+	Client
+        client_storage()
+        logger
+    Blob
+        bucket_blob()
+		logger
 	:::**TO DO**::: latency and throughput?
 
 data_ingestion.py
@@ -91,7 +96,7 @@ data_ingestion.py
         reprocess = from the user range 
             mode = batch or full
         ingestion()
-        logs
+        logger
     :::**TO DO**::: latency and throughput?
 ```
 
