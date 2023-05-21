@@ -80,10 +80,13 @@ socrata.py
 	:::**TO DO**::: latency and throughput?
 
 storage.py
-	Client
+    Client
         client_storage()
         logger
-    Blob
+    Bucket :::**TO DO**::: 
+        list_blobs()
+        logger
+    Blob :::**TO DO**::: 
         bucket_blob()
 		logger
 	:::**TO DO**::: latency and throughput?

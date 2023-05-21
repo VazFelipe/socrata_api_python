@@ -8,9 +8,6 @@ logger = logging.getLogger(__name__)
 @dataclass
 class Utils():
     args_dict: dict
-    client: str
-    bucket: str
-    blob: str
 
     def modify_entry_params(self):
 
@@ -22,8 +19,6 @@ class Utils():
             logger.info('From {cls} the attr: {attr}'.format(cls=type(self.args_dict).__name__, attr=self.args_dict), exc_info=True)
 
             return self.args_dict
-    
-    # def fetch_max_date_from_bucket()
 
 if __name__ == '__main__':
     Utils
