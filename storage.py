@@ -63,13 +63,12 @@ class Blob(Bucket):
         self.bucket = Bucket().bucket_obj()
         self.blob = self.bucket.list_blobs(prefix=self.prefix_folder) 
 
-        blob_list = []
         for blob in self.blob:
             blob_name = blob.name
-            blob_list.append(blob_name)
+            self.blob_list.append(blob_name)
         
         logger.info('From {cls} listing blobs with attr: {attr}'.format(cls=self.blob_list.__class__.__name__, attr=self.blob_list), exc_info=True)
-        return blob_list
+        return self.blob_list
     
 @dataclass
 class Blob_obj():

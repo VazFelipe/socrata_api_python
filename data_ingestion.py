@@ -49,20 +49,18 @@ class Data:
         self.start_date = self.args_converted["start_date"]
     
     def list_dates(self):
-        self.day_range = int((datetime.strptime(self.end_date, "%Y-%m-%dT%H:%M:%S.%f") - datetime.strptime(self.start_date, "%Y-%m-%dT%H:%M:%S.%f")).days)+1
+        self.day_range = int((datetime.strptime(self.end_date, "%Y-%m-%dT%H:%M:%S.%f") - datetime.strptime(self.start_date, "%Y-%m-%dT%H:%M:%S.%f")).days)
         self.blob_list = Blob().list_blobs()
         pattern = "([0-9]{4}\-[0-9]{2}\-[0-9]{2})"
         for blob in self.blob_list:
             dates = re.findall(pattern=pattern, string=blob)
             self.date_list.append(dates)
 
+        self.date_list.append(datetime.fromisoformat(str(self.start_date)).strftime("%Y-%m-%d"))
         for day in range(self.day_range):
-            # self.start_date = datetime.fromisoformat(str(self.start_date))
-            # self.date_list.append(self.start_date.strftime("%Y-%m-%d"))
             if day <= self.day_range:
-                # self.start_date = (datetime.strptime(self.start_date, "%Y-%m-%dT%H:%M:%S.%f") + timedelta(days=1)).isoformat()
-                self.start_date = (datetime.fromisoformat(str(self.start_date)) + timedelta(days=(day-day)+1)).strftime("%Y-%m-%d")
-                self.date_list.append(self.start_date)
+                date = (datetime.fromisoformat(str(self.start_date)) + timedelta(days=day+1)).strftime("%Y-%m-%d")
+                self.date_list.append(date)
 
         return self.date_list
 
