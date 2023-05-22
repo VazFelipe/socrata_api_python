@@ -5,7 +5,7 @@ from google.cloud import storage
 from dataclasses import dataclass, field
 from collections import defaultdict
 
-# logging.config.fileConfig('logging.ini', disable_existing_loggers=False)
+logging.config.fileConfig('logging.ini', disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
 
 with open('config.json', 'r') as f:
@@ -45,6 +45,7 @@ class Bucket(Client):
 class Blob(Bucket):
     blob: str = field(init=False)
     blob_list: list = field(default_factory=list)
+    blob_dict: "defaultdict[dict]" = field(default_factory=lambda: defaultdict(dict), init=False)
     bucket_name: str = field(init=False)
     client: str = field(init=False)
     prefix_folder: str = field(init=False)
@@ -67,9 +68,12 @@ class Blob(Bucket):
             blob_name = blob.name
             self.blob_list.append(blob_name)
         
-        logger.info('From {cls} listing blobs with attr: {attr}'.format(cls=self.blob_list.__class__.__name__, attr=self.blob_list), exc_info=True)
+        # self.blob_dict = dict(enumerate(self.blob_list))
+
+        logger.info('From {cls} listing blobs with attr: {attr}'.format(cls=self.blob_dict.__class__.__name__, attr=self.blob_dict), exc_info=True)
+        # return self.blob_dict
         return self.blob_list
-    
+
 @dataclass
 class Blob_obj():
     blob: str = field(init=False)
@@ -116,4 +120,4 @@ if __name__ == '__main__':
     #     print(Client().client_storage())
 
     # blobs = Blob().list_blobs()
-    # print(blobs)
+    # print(type(blobs))
