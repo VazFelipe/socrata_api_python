@@ -26,16 +26,16 @@ import logging
 # new_params = Utils(params).modify_entry_params()
 # print(params["$where"])
 
-levels ={
-    "exception": logging.exception,
-    "info": logging.info,
-    "warning": logging.warning,
-    "error": logging.error,
-    "debug": logging.debug,
-    "critical": logging.critical
-}
+# levels ={
+#     "exception": logging.exception,
+#     "info": logging.info,
+#     "warning": logging.warning,
+#     "error": logging.error,
+#     "debug": logging.debug,
+#     "critical": logging.critical
+# }
 
-print(levels.__class__.__name__)
+# print(levels.__class__.__name__)
 
 # for item in levels.keys():
 #     print(type(levels[item]))
@@ -53,3 +53,9 @@ print(levels.__class__.__name__)
 # var = 'my string'
 # print(var)
 # logging.info('ending')
+
+mydate = '2018-01-01 00:00:00' #'"incident_datetime BETWEEN '2018-01-01 00:00:00' AND '2018-01-02T00:16:38.999000"'
+
+mydate_2 = datetime.strptime(mydate,"%Y-%m-%d %H:%M:%S") + timedelta(days=0,hours=23,minutes=59,seconds=59)
+
+print(mydate_2)
