@@ -1,6 +1,22 @@
 # The script provides studies about API requests.
 
-## The proof of concept - phase 1
+## Raw data from Police Department Incident Reports
+
+> more details in: https://dev.socrata.com/foundry/data.sfgov.org/wg3w-h783
+
+## Architecture
+
+- I'm using Python as language and Cloud Platforms like Google Cloud and Azure
+- Basically, I'm requesting data from API and storage it on Cloud Storage (Phase 1 and 2) :::**DONE**::: 
+- Then in the Phase 3 I'll start developin on Azure Plarform and ingest raw data :::**TO DO**:::
+- The topology layers will be Bronze :::**TO DO**::: > Silver :::**TO DO**::: > Gold :::**TO DO**:::
+
+## Ideas behind the scenes
+
+> more details in: https://www.ibm.com/garage/method/practices/code/construct-data-topology/ and
+> https://learn.microsoft.com/en-us/azure/databricks/lakehouse/medallion
+
+## The Raw ingestion using Python Functional Programming best practices: phase 1
 
 > request_socrata_soda.py ingest data from Police Department Incident Reports in a JSON form and load into a bucket using parameters to define the start incident_datetime and the number_of_days desired. The idea is for testing the processing and reprocessing feature.
 
@@ -18,17 +34,28 @@
             "san_francisco_data": "wg3w-h783"
         },
         "credentials": {
-            "username": "your username from Socrata",
-            "password": "your password from Socrata"
+            "username": "<YOUR CREDENTIAL>",
+            "password": "<YOUR PASSWORD>"
         },
         "headers": {
-            "X-App-Token": "App token from Socrata Api",
+            "X-App-Token": "Ax7ks1Cmr0r6TEssy44yJj4ts",
             "Content-type": "application/json"
-        }
+        },
+        "params":{
+            "$limit": "9999999999", 
+            "$where": "incident_datetime",
+            "$$exclude_system_fields": false
+            }
     },
     "gcp":{
         "credentials":{
-            "folder": "GCP service_account from your directory"
+            "folder": "<YOUR JSON FOLDER>"
+        },
+        "bucket": {
+            "mode": "socrata",
+            "bucket_name": "<YOUR BUCKET NAME>",
+            "prefix_socrata": "socrata",
+            "prefix_test": "test"
         }
     }
 }
@@ -46,23 +73,9 @@
 
 > this codes has many to dos, so do not hesitate in criticize. Although, I'll not provide any update on it, just learn from your thoughts.
 
-### Raw data from Police Department Incident Reports
+## The Raw ingestion using Python best practices: classes - phase 2
 
-> more details in: https://dev.socrata.com/foundry/data.sfgov.org/wg3w-h783
-
-### Architecture
-
-- I'm using Google Cloud Platform for this project
-- Basically, Request from API and storage on Cloud Storage :::**DONE**::: and then staging on BigQuery :::**TO DO**:::
-- The topology will be Raw :::**DONE**::: > Staging :::**TO DO**::: > Master Data :::**TO DO**:::
-
-### Ideas behind the scenes
-
-> more details in: https://www.ibm.com/garage/method/practices/code/construct-data-topology/
-
-## The Raw in production using Python best practices: classes - phase 2
-
-> in this phase I'll study and implement classes to organize and make this code more readable, reusable and scalable :::**TO DO**:::
+> in this phase I'll study and implement classes to organize and make this code more readable, reusable and scalable :::**DONE**:::
 
 > My thoughts about the classes diagram looks like:
 
@@ -77,30 +90,27 @@ socrata.py
     Socrata
 	    api_connection()
 		logger
-	:::**TO DO**::: latency and throughput?
 
 storage.py
     Client
         client_storage()
         logger
-    Bucket :::**TO DO**::: 
-        list_blobs()
+    Bucket
+        bucket_obj()
         logger
-    Blob :::**TO DO**::: 
-        bucket_blob()
+    Blob
+        list_blobs() 
 		logger
-	:::**TO DO**::: latency and throughput?
+    Blob_obj
+        blob_obj()
+        logger
 
 data_ingestion.py
     Data
-        params = start_date, end_date, bucket_name,  
-        default = from last date in the bucket
-            first load = from the minimal incident_datetime in the api data
-        reprocess = from the user range 
-            mode = batch or full
+        list_dates()
         ingestion()
         logger
-    :::**TO DO**::: latency and throughput?
+main.py 
 ```
 
 

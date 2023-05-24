@@ -5,7 +5,6 @@ from google.cloud import storage
 from dataclasses import dataclass, field
 from collections import defaultdict
 
-logging.config.fileConfig('logging.ini', disable_existing_loggers=False)
 logger = logging.getLogger(__name__)
 
 with open('config.json', 'r') as f:
@@ -67,11 +66,8 @@ class Blob(Bucket):
         for blob in self.blob:
             blob_name = blob.name
             self.blob_list.append(blob_name)
-        
-        # self.blob_dict = dict(enumerate(self.blob_list))
 
         logger.info('From {cls} listing blobs with attr: {attr}'.format(cls=self.blob_dict.__class__.__name__, attr=self.blob_dict), exc_info=True)
-        # return self.blob_dict
         return self.blob_list
 
 @dataclass
@@ -109,15 +105,3 @@ if __name__ == '__main__':
     
     # TO DO: I did not find a way to make reusable the Blob class because the blob_name attribute. So, I had to build this Blob_obj class
     Blob_obj
-    
-    # name_bucket = config.get('gcp').get('bucket').get('bucket_name')
-    # name_blob = 'my_file_7.csv'
-    # bucket = Bucket()
-    # blob = Blob_obj(blob_name=name_blob).blob_obj()
-
-    # with blob.open("w") as write_file:
-    #     json.dump(config.get('api').get('domain').get('url'), write_file, indent=4)
-    #     print(Client().client_storage())
-
-    # blobs = Blob().list_blobs()
-    # print(type(blobs))
