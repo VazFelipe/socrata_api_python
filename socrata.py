@@ -16,7 +16,7 @@ class Params:
 
                 if key.startswith("$where"):
 
-                    params_updated = {key: value + " BETWEEN '" + str(self.start_date) + "' AND '" + (datetime.strptime(str(self.start_date),"%Y-%m-%d %H:%M:%S") + timedelta(days=0, hours=23,minutes=59,seconds=59,milliseconds=999999)).strftime("%Y-%m-%dT%H:%M:%S.%f")}
+                    params_updated = {key: value + " BETWEEN '" + str(self.start_date) + "' AND '" + (datetime.strptime(str(self.start_date),"%Y-%m-%dT%H:%M:%S") + timedelta(days=0, hours=23,minutes=59,seconds=59)).strftime("%Y-%m-%dT%H:%M:%S") + "'"}
 
                     self.parameters.update(params_updated)  
 
