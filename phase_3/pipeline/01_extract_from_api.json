@@ -76,7 +76,7 @@
 				}
 			},
 			{
-				"name": "Fetch Data From Socrata Api to Blob Storage Gen2",
+				"name": "Socrata Api to Blob Storage Gen2",
 				"type": "Copy",
 				"dependsOn": [
 					{
