@@ -1,0 +1,68 @@
+{
+	"name": "Append trigger_time",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "LogSourceTemplate",
+						"type": "DatasetReference"
+					},
+					"name": "LogSourceTemplate"
+				},
+				{
+					"dataset": {
+						"referenceName": "log",
+						"type": "DatasetReference"
+					},
+					"name": "LogSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "log",
+						"type": "DatasetReference"
+					},
+					"name": "LogLoad"
+				}
+			],
+			"transformations": [
+				{
+					"name": "union1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          processing_mode as string,",
+				"          insert_datetime as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> LogSourceTemplate",
+				"source(output(",
+				"          processing_mode as string,",
+				"          insert_datetime as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> LogSource",
+				"LogSource, LogSourceTemplate union(byName: false)~> union1",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          processing_mode as string,",
+				"          insert_datetime as string",
+				"     ),",
+				"     partitionFileNames:['ingestion_api_socrata.log'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> LogLoad"
+			]
+		}
+	}
+}

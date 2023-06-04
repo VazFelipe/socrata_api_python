@@ -1,0 +1,59 @@
+{
+	"name": "current_datetime_OLD",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "log",
+						"type": "DatasetReference"
+					},
+					"name": "LogSource"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "log",
+						"type": "DatasetReference"
+					},
+					"name": "loadLoad"
+				}
+			],
+			"transformations": [
+				{
+					"name": "currentdatetime"
+				},
+				{
+					"name": "union1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          processing_mode as string,",
+				"          insert_datetime as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> LogSource",
+				"LogSource derive(processing_mode = toString('FULL LOAD'),",
+				"          insert_datetime = concat(concat(concat(toString(currentTimestamp(), 'yyyy-MM-dd', 'UTC', 'en-US'),'T'),toString(currentTimestamp(), 'HH:mm:ss.SSSSSSS', 'UTC', 'en-US')),'Z')) ~> currentdatetime",
+				"currentdatetime, LogSource union(byName: true)~> union1",
+				"union1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          processing_mode as string,",
+				"          insert_datetime as string",
+				"     ),",
+				"     partitionFileNames:['ingestion_api_socrata.log'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> loadLoad"
+			]
+		}
+	}
+}

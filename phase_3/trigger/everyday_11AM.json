@@ -1,0 +1,32 @@
+{
+	"name": "everyday_11AM",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "01_extract_from_api",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"exclude_system_fields": "False",
+					"limit": "9999999999",
+					"where": "report_datetime ",
+					"dataset": "police_department",
+					"field_name": "report_datetime",
+					"response_format": ".json"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-06-04T11:00:00Z",
+				"timeZone": "UTC"
+			}
+		}
+	}
+}

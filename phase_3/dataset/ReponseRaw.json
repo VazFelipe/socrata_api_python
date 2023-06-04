@@ -1,0 +1,28 @@
+{
+	"name": "ReponseRaw",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dls_socrata_api",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"dataset": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": {
+					"value": "@dataset().dataset",
+					"type": "Expression"
+				},
+				"fileSystem": "01-raw"
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,52 @@
+{
+	"name": "ResponseJsonPoliceDepartment",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dls_socrata_api",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"dataset": {
+				"type": "string"
+			},
+			"trigger_time_year": {
+				"type": "string"
+			},
+			"trigger_time_month": {
+				"type": "string"
+			},
+			"field_name": {
+				"type": "string"
+			},
+			"response_format": {
+				"type": "string"
+			},
+			"unix_trigger_time": {
+				"type": "string"
+			},
+			"file_path": {
+				"type": "string"
+			},
+			"file_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().field_name",
+					"type": "Expression"
+				},
+				"fileSystem": {
+					"value": "@dataset().file_path",
+					"type": "Expression"
+				}
+			}
+		},
+		"schema": {}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

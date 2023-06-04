@@ -1,0 +1,33 @@
+{
+	"name": "log",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dls_socrata_api",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "ingestion_api_socrata.log",
+				"fileSystem": "execution-logs"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "processing_mode",
+				"type": "String"
+			},
+			{
+				"name": "insert_datetime",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

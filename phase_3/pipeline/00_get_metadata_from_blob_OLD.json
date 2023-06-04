@@ -1,0 +1,671 @@
+{
+	"name": "00_get_metadata_from_blob_OLD",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Metadata 01_raw",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ReponseRaw",
+						"type": "DatasetReference",
+						"parameters": {
+							"dataset": "police_department"
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "JsonReadSettings"
+					}
+				}
+			},
+			{
+				"name": "ForEach dls 01_raw",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata 01_raw",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Metadata 01_raw').output.childItems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Get Metadata 01_raw 2",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "ResponseJsonPD",
+									"type": "DatasetReference",
+									"parameters": {
+										"file_name": {
+											"value": "@item().Name",
+											"type": "Expression"
+										},
+										"dataset": {
+											"value": "@pipeline().parameters.dataset",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"lastModified",
+									"itemName"
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							}
+						},
+						{
+							"name": "If Condition last_modified",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Get Metadata 01_raw 2",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@greater(activity('Get Metadata 01_raw 2').output.lastModified, variables('year'))",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "year",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "year",
+											"value": {
+												"value": "@activity('Get Metadata 01_raw 2').output.itemName",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "dataset_parent_year",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach dls 01_raw",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "dataset_parent_year",
+					"value": {
+						"value": "@concat(concat(pipeline().parameters.dataset,'/'),variables('year'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Get Metadata1",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "dataset_parent_year",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ResponseRawParent",
+						"type": "DatasetReference",
+						"parameters": {
+							"dataset": {
+								"value": "@concat(variables('dataset_parent_year'),'/')",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "JsonReadSettings"
+					}
+				}
+			},
+			{
+				"name": "ForEach dls 01_raw_copy1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Metadata1').output.childItems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Get Metadata 01_raw 2_copy1",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "ResponseJsonPD",
+									"type": "DatasetReference",
+									"parameters": {
+										"file_name": {
+											"value": "@item().Name",
+											"type": "Expression"
+										},
+										"dataset": {
+											"value": "@variables('dataset_parent_year')",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"lastModified",
+									"itemName"
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							}
+						},
+						{
+							"name": "If Condition last_modified_copy1",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Get Metadata 01_raw 2_copy1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@greater(activity('Get Metadata 01_raw 2_copy1').output.lastModified, variables('month'))",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "month",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "month",
+											"value": {
+												"value": "@activity('Get Metadata 01_raw 2_copy1').output.itemName",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "dataset_parent_year_month",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach dls 01_raw_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "dataset_parent_year_month",
+					"value": {
+						"value": "@concat(concat(variables('dataset_parent_year'),'/'),variables('month'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Get Metadata1_copy1",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "dataset_parent_year_month",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ResponseRawParent",
+						"type": "DatasetReference",
+						"parameters": {
+							"dataset": {
+								"value": "@concat(variables('dataset_parent_year_month'),'/')",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "JsonReadSettings"
+					}
+				}
+			},
+			{
+				"name": "ForEach dls 01_raw_copy1_copy1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Metadata1_copy1').output.childItems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Get Metadata 01_raw 2_copy1_copy1",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "ResponseJsonPD",
+									"type": "DatasetReference",
+									"parameters": {
+										"file_name": {
+											"value": "@item().Name",
+											"type": "Expression"
+										},
+										"dataset": {
+											"value": "@variables('dataset_parent_year_month')",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"lastModified",
+									"itemName"
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							}
+						},
+						{
+							"name": "If Condition last_modified_copy1_copy1",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Get Metadata 01_raw 2_copy1_copy1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@greater(activity('Get Metadata 01_raw 2_copy1_copy1').output.lastModified, variables('day'))",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "day",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "day",
+											"value": {
+												"value": "@activity('Get Metadata 01_raw 2_copy1_copy1').output.itemName",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "dataset_parent_year_month_day",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach dls 01_raw_copy1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "dataset_parent_year_month_day",
+					"value": {
+						"value": "@concat(concat(variables('dataset_parent_year_month'),'/'),variables('day'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Get Metadata1_copy1_copy1",
+				"type": "GetMetadata",
+				"dependsOn": [
+					{
+						"activity": "dataset_parent_year_month_day",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ResponseRawParent",
+						"type": "DatasetReference",
+						"parameters": {
+							"dataset": {
+								"value": "@concat(variables('dataset_parent_year_month_day'),'/')",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "JsonReadSettings"
+					}
+				}
+			},
+			{
+				"name": "ForEach dls 01_raw_copy1_copy1_copy1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Metadata1_copy1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Metadata1_copy1_copy1').output.childItems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "Get Metadata 01_raw 2_copy1_copy1_copy1",
+							"type": "GetMetadata",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"dataset": {
+									"referenceName": "ResponseJsonPD",
+									"type": "DatasetReference",
+									"parameters": {
+										"file_name": {
+											"value": "@item().Name",
+											"type": "Expression"
+										},
+										"dataset": {
+											"value": "@variables('dataset_parent_year_month_day')",
+											"type": "Expression"
+										}
+									}
+								},
+								"fieldList": [
+									"lastModified",
+									"itemName"
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
+								}
+							}
+						},
+						{
+							"name": "If Condition last_modified_copy1_copy1_copy1",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "Get Metadata 01_raw 2_copy1_copy1_copy1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@greater(activity('Get Metadata 01_raw 2_copy1_copy1_copy1').output.lastModified, variables('file_name'))",
+									"type": "Expression"
+								},
+								"ifTrueActivities": [
+									{
+										"name": "filename",
+										"type": "SetVariable",
+										"dependsOn": [],
+										"userProperties": [],
+										"typeProperties": {
+											"variableName": "file_name",
+											"value": {
+												"value": "@activity('Get Metadata 01_raw 2_copy1_copy1_copy1').output.itemName",
+												"type": "Expression"
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "filename_final",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach dls 01_raw_copy1_copy1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "filename",
+					"value": {
+						"value": "@variables('file_name')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"dataset": {
+				"type": "string",
+				"defaultValue": "police_department"
+			}
+		},
+		"variables": {
+			"file_name": {
+				"type": "String"
+			},
+			"last_modified": {
+				"type": "String"
+			},
+			"year": {
+				"type": "String"
+			},
+			"month": {
+				"type": "String"
+			},
+			"day": {
+				"type": "String"
+			},
+			"dataset_parent_year": {
+				"type": "String"
+			},
+			"dataset_parent_year_month": {
+				"type": "String"
+			},
+			"dataset_parent_year_month_day": {
+				"type": "String"
+			},
+			"filename": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2023-05-31T11:11:59Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

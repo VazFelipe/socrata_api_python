@@ -1,0 +1,52 @@
+{
+	"name": "RestResourcePoliceDepartment",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "RestApiSocrataService",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"exclude_system_fields": {
+					"value": "@dataset().exclude_system_fields",
+					"type": "Expression"
+				},
+				"limit": {
+					"value": "@dataset().limit",
+					"type": "Expression"
+				},
+				"where": {
+					"value": "@dataset().where",
+					"type": "Expression"
+				},
+				"start_date": {
+					"value": "@dataset().start_date",
+					"type": "Expression"
+				},
+				"end_date": {
+					"value": "@dataset().end_date",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"exclude_system_fields": {
+				"type": "string"
+			},
+			"limit": {
+				"type": "string"
+			},
+			"where": {
+				"type": "string"
+			},
+			"start_date": {
+				"type": "string"
+			},
+			"end_date": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
