@@ -207,7 +207,7 @@
 						]
 					},
 					{
-						"activity": "Union Log",
+						"activity": "Watermark unified",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -255,7 +255,7 @@
 				}
 			},
 			{
-				"name": "Copy trigger_time to Blob",
+				"name": "Copy watermark to blob",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -360,11 +360,11 @@
 				]
 			},
 			{
-				"name": "Union Log",
+				"name": "Watermark unified",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "Copy trigger_time to Blob",
+						"activity": "Copy watermark to blob",
 						"dependencyConditions": [
 							"Succeeded"
 						]
