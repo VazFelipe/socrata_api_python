@@ -347,6 +347,7 @@
 						"type": "Expression"
 					},
 					"method": "POST",
+					"body": "a",
 					"httpRequestTimeout": "00:01:00",
 					"authentication": {
 						"type": "MSI",
