@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-dev-eastus-0001"
+		},
+		"RestApiSocrataService_password": {
+			"value": ""
+		},
+		"dls_socrata_api_accountKey": {
+			"value": ""
+		},
+		"RestApiSocrataService_properties_typeProperties_url": {
+			"value": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',linkedService().exclude_system_fields),'&$limit='),linkedService().limit),'&$where='),linkedService().where),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date)}"
+		},
+		"RestApiSocrataService_properties_typeProperties_userName": {
+			"value": "2osd2wzioj43v7iymmfnt74x3"
+		},
+		"dls_socrata_api_properties_typeProperties_url": {
+			"value": "https://dlsdeveastus0001.dfs.core.windows.net/"
+		},
+		"everyday_11AM_properties_01_extract_from_api_parameters_exclude_system_fields": {
+			"value": "False"
+		},
+		"everyday_11AM_properties_01_extract_from_api_parameters_limit": {
+			"value": "9999999999"
+		},
+		"everyday_11AM_properties_01_extract_from_api_parameters_where": {
+			"value": "report_datetime "
+		},
+		"everyday_11AM_properties_01_extract_from_api_parameters_dataset": {
+			"value": "police_department"
+		},
+		"everyday_11AM_properties_01_extract_from_api_parameters_field_name": {
+			"value": "report_datetime"
+		},
+		"everyday_11AM_properties_01_extract_from_api_parameters_response_format": {
+			"value": ".json"
+		}
+	}
+}
