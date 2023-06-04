@@ -8,8 +8,8 @@
 
 - I'm using Python as language and Cloud Platforms like Google Cloud and Azure
 - Basically, I'm requesting data from API and storage it on Cloud Storage (Phase 1 and 2) :::**DONE**::: 
-- Then in the Phase 3 I'll start developin on Azure Plarform and ingest raw data :::**TO DO**:::
-- The topology layers will be Bronze :::**TO DO**::: > Silver :::**TO DO**::: > Gold :::**TO DO**:::
+- Then in the Phase 3 I'll start developing on Azure Plarform using the medallion architecture :::**DOING**:::
+- The data layers will be Bronze :::**DONE**::: > Silver :::**DOING**::: > Gold :::**TO DO**:::
 
 ## Ideas behind the scenes
 
@@ -112,5 +112,20 @@ data_ingestion.py
         logger
 main.py 
 ```
+## The development of medallion architecture in Azure Platform - phase 3
 
+### 01-raw
 
+This parametrized template developed here ingest raw data from the City and County of San Francisco using Socrata Open Data API. The San Francisco Police Department's (SFPD) Incident Report Dataset is one of the most used reports for crime analysis. See the literature [here](https://www.sanfranciscopolice.org/sites/default/files/2022-11/SFPDQADRReport-2ndQuarter-20221129.pdf) and [here](https://scholar.google.com.br/scholar?hl=pt-BR&as_sdt=0%2C5&q=The+San+Francisco+Police+Department%E2%80%99s+%28SFPD%29+Incident+Report+Dataset&btnG=).
+
+The holistic workflow presented below executes everyday at 11AM UTC, flag the trigger time as a watermark and store it in the /execution_logs/ingestion_api_socrata.log. Then, the next execution starts from the last execution time in the log. This techinique is well documented [here](https://dwbi1.wordpress.com/2022/05/22/watermark-in-data-warehousing/) and [here](https://learn.microsoft.com/en-us/azure/data-factory/tutorial-incremental-copy-overview). 
+
+Bronze Layer
+
+![](/phase_3/images/bronze_layer.png)
+
+The response from Socrata API is a JSON format and is stored in a hierarchical structure inside the blob storage Gen2 like Year/Month/watermakUnixTimestamp_fieldName_reportGenerationYYYMMDD.json
+
+Hierarchical Structure in the blob Storage Gen2
+
+![](/phase_3/images/hierarchical_structure.png)
