@@ -3,3 +3,4 @@ config.json
 venv/
 __pychache__/
 *.log
+phase_3/factory/

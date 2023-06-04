@@ -13,7 +13,7 @@ from storage import *
 
 logger = logging.getLogger(__name__)
 
-with open('config.json', 'r') as f:
+with open('phase_2/config.json', 'r') as f:
     config = json.load(f)
 
 parser = argparse.ArgumentParser(description="Extract the dataset named Police Department Incident Reports: 2018 to Present \

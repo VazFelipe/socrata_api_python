@@ -7,7 +7,7 @@ from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
-with open('config.json', 'r') as f:
+with open('phase_2/config.json', 'r') as f:
     config = json.load(f)
 
 @dataclass
