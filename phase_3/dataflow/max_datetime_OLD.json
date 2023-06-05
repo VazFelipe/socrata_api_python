@@ -1,12 +1,15 @@
 {
 	"name": "max_datetime_OLD",
 	"properties": {
+		"folder": {
+			"name": "OLD"
+		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "log",
+						"referenceName": "LogSource",
 						"type": "DatasetReference"
 					},
 					"name": "source1"

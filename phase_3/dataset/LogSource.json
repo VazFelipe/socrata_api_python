@@ -1,5 +1,5 @@
 {
-	"name": "log",
+	"name": "LogSource",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "dls_socrata_api",
