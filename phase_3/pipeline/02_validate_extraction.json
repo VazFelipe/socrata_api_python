@@ -1,6 +1,64 @@
 {
 	"name": "02_validate_extraction",
 	"properties": {
+		"activities": [
+			{
+				"name": "ReadLogSource",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "LogSource",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ReadLogSource",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "insert_time",
+					"value": {
+						"value": "@last(activity('ReadLogSource').output.value[0].insert_datetime)",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"insert_time": {
+				"type": "Array"
+			}
+		},
 		"annotations": []
 	}
 }

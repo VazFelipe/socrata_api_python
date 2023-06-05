@@ -11,6 +11,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "ingestion_api_socrata_template.log",
+				"folderPath": "01-raw",
 				"fileSystem": "execution-logs"
 			},
 			"columnDelimiter": ",",
