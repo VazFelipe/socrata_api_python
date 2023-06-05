@@ -1,5 +1,5 @@
 {
-	"name": "01_append_trigger_time_bronze",
+	"name": "01_append_trigger_time_silver",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {

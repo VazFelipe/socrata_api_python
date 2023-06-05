@@ -380,7 +380,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "append_trigger_time",
+						"referenceName": "01_append_trigger_time_bronze",
 						"type": "DataFlowReference"
 					},
 					"compute": {
