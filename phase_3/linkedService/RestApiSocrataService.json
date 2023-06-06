@@ -10,7 +10,7 @@
 			"limit": {
 				"type": "string"
 			},
-			"where": {
+			"where_1": {
 				"type": "string"
 			},
 			"start_date": {
@@ -18,16 +18,19 @@
 			},
 			"end_date": {
 				"type": "string"
+			},
+			"where_2": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
 		"type": "RestService",
 		"typeProperties": {
-			"url": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',linkedService().exclude_system_fields),'&$limit='),linkedService().limit),'&$where='),linkedService().where),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date)}",
+			"url": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',linkedService().exclude_system_fields),'&$limit='),linkedService().limit),'&$where='),linkedService().where_1),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date),' OR '),linkedService().where_2),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date)}",
 			"enableServerCertificateValidation": true,
 			"authenticationType": "Basic",
 			"userName": "2osd2wzioj43v7iymmfnt74x3",
-			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEI5NjdDREY5LUE4MDYtNEZENi1BMzEwLTYxN0Y2NUMxMUZCQ183ODg3MzYyMS0zZjkwLTRmYWQtYmU1OC1kNDRlYTMxOWFmNzMiDQp9"
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEI5NjdDREY5LUE4MDYtNEZENi1BMzEwLTYxN0Y2NUMxMUZCQ19mOWNlMTA4Yy1hZjRmLTRjMDgtYTkwZS0wZGRlZTc4YzcwYWEiDQp9"
 		}
 	}
 }
