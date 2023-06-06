@@ -164,10 +164,6 @@
 								"value": "@variables('trigger_time_month')",
 								"type": "Expression"
 							},
-							"field_name": {
-								"value": "@variables('file_name')",
-								"type": "Expression"
-							},
 							"response_format": {
 								"value": "@pipeline().parameters.response_format",
 								"type": "Expression"

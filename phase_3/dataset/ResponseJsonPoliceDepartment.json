@@ -15,9 +15,6 @@
 			"trigger_time_month": {
 				"type": "string"
 			},
-			"field_name": {
-				"type": "string"
-			},
 			"response_format": {
 				"type": "string"
 			},
@@ -37,7 +34,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@dataset().field_name",
+					"value": "@dataset().file_name",
 					"type": "Expression"
 				},
 				"fileSystem": {
