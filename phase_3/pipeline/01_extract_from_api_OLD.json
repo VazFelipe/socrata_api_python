@@ -155,7 +155,7 @@
 								"value": "@pipeline().parameters.limit",
 								"type": "Expression"
 							},
-							"where": {
+							"where_1": {
 								"value": "@pipeline().parameters.where",
 								"type": "Expression"
 							},
@@ -166,7 +166,8 @@
 							"end_date": {
 								"value": "@pipeline().parameters.end_date",
 								"type": "Expression"
-							}
+							},
+							"where_2": "a"
 						}
 					}
 				],

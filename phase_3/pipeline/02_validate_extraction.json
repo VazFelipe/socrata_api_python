@@ -34,7 +34,7 @@
 				}
 			},
 			{
-				"name": "Set variable1",
+				"name": "insert_datetime",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
@@ -46,17 +46,40 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "insert_time",
+					"variableName": "insert_datetime",
 					"value": {
-						"value": "@json(activity('ReadLogSource').output.value[0]).value",
+						"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,28)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "datetime_year",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "insert_datetime",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "datetime_year",
+					"value": {
+						"value": "@formatDateTime(variables('insert_datetime'),'yyyy')",
 						"type": "Expression"
 					}
 				}
 			}
 		],
 		"variables": {
-			"insert_time": {
-				"type": "Array"
+			"insert_datetime": {
+				"type": "String"
+			},
+			"datetime_year": {
+				"type": "String"
 			}
 		},
 		"annotations": []
