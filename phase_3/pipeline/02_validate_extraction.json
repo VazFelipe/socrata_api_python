@@ -34,7 +34,7 @@
 				}
 			},
 			{
-				"name": "Set variable1",
+				"name": "count_log_source",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
@@ -46,17 +46,40 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
-					"variableName": "insert_time",
+					"variableName": "count_log_source",
 					"value": {
-						"value": "@json(activity('ReadLogSource').output.value[0]).value",
+						"value": "@string(activity('ReadLogSource').output.count)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "insert_datetime",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "count_log_source",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "insert_datetime",
+					"value": {
+						"value": "@string(activity('ReadLogSource').output.value[add(int(variables('count_log_source')),-1)])",
 						"type": "Expression"
 					}
 				}
 			}
 		],
 		"variables": {
-			"insert_time": {
-				"type": "Array"
+			"count_log_source": {
+				"type": "String"
+			},
+			"insert_datetime": {
+				"type": "String"
 			}
 		},
 		"annotations": []
