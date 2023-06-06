@@ -1,5 +1,5 @@
 {
-	"name": "everyday_2PM_UTC",
+	"name": "everyday_11AM_Brasilia",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
@@ -24,8 +24,8 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2023-06-04T14:00:00Z",
-				"timeZone": "UTC"
+				"startTime": "2023-06-05T11:00:00",
+				"timeZone": "E. South America Standard Time"
 			}
 		}
 	}
