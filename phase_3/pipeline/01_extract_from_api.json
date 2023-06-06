@@ -128,8 +128,8 @@
 								"value": "@pipeline().parameters.limit",
 								"type": "Expression"
 							},
-							"where": {
-								"value": "@pipeline().parameters.where",
+							"where_1": {
+								"value": "@pipeline().parameters.where_1",
 								"type": "Expression"
 							},
 							"start_date": {
@@ -138,6 +138,10 @@
 							},
 							"end_date": {
 								"value": "@variables('end_date')",
+								"type": "Expression"
+							},
+							"where_2": {
+								"value": "@pipeline().parameters.where_2",
 								"type": "Expression"
 							}
 						}
@@ -249,7 +253,7 @@
 				"typeProperties": {
 					"variableName": "file_name",
 					"value": {
-						"value": "@concat(concat(concat(concat(variables('unix_trigger_time'),'_'),pipeline().parameters.field_name,'_'),formatDateTime(replace(variables('start_date'),'''',''), 'yyyyMMdd')),pipeline().parameters.response_format)",
+						"value": "@concat(concat(concat(concat(concat(concat(variables('unix_trigger_time'),'_'),pipeline().parameters.field_name_1,'_'),pipeline().parameters.field_name_2),'_'),formatDateTime(replace(variables('start_date'),'''',''), 'yyyyMMdd')),pipeline().parameters.response_format)",
 						"type": "Expression"
 					}
 				}
@@ -492,7 +496,7 @@
 				"type": "string",
 				"defaultValue": "9999999999"
 			},
-			"where": {
+			"where_1": {
 				"type": "string",
 				"defaultValue": ":created_at "
 			},
@@ -500,13 +504,21 @@
 				"type": "string",
 				"defaultValue": "police_department"
 			},
-			"field_name": {
+			"field_name_1": {
 				"type": "string",
 				"defaultValue": "created_at"
 			},
 			"response_format": {
 				"type": "string",
 				"defaultValue": ".json"
+			},
+			"field_name_2": {
+				"type": "string",
+				"defaultValue": "updated_at"
+			},
+			"where_2": {
+				"type": "string",
+				"defaultValue": ":updated_at "
 			}
 		},
 		"variables": {

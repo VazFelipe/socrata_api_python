@@ -13,8 +13,8 @@
 					"value": "@dataset().limit",
 					"type": "Expression"
 				},
-				"where": {
-					"value": "@dataset().where",
+				"where_1": {
+					"value": "@dataset().where_1",
 					"type": "Expression"
 				},
 				"start_date": {
@@ -23,6 +23,10 @@
 				},
 				"end_date": {
 					"value": "@dataset().end_date",
+					"type": "Expression"
+				},
+				"where_2": {
+					"value": "@dataset().where_2",
 					"type": "Expression"
 				}
 			}
@@ -34,13 +38,16 @@
 			"limit": {
 				"type": "string"
 			},
-			"where": {
+			"where_1": {
 				"type": "string"
 			},
 			"start_date": {
 				"type": "string"
 			},
 			"end_date": {
+				"type": "string"
+			},
+			"where_2": {
 				"type": "string"
 			}
 		},

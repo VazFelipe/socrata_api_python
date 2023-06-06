@@ -12,9 +12,9 @@
 				"parameters": {
 					"exclude_system_fields": "False",
 					"limit": "9999999999",
-					"where": "report_datetime ",
+					"where_1": "report_datetime ",
 					"dataset": "police_department",
-					"field_name": "report_datetime",
+					"field_name_1": "report_datetime",
 					"response_format": ".json"
 				}
 			}
