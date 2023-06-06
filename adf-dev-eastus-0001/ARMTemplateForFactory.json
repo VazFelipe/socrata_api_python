@@ -17,7 +17,7 @@
 		},
 		"RestApiSocrataService_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',linkedService().exclude_system_fields),'&$limit='),linkedService().limit),'&$where='),linkedService().where),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date)}"
+			"defaultValue": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',linkedService().exclude_system_fields),'&$limit='),linkedService().limit),'&$where='),linkedService().where_1),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date),' OR '),linkedService().where_2),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date)}"
 		},
 		"RestApiSocrataService_properties_typeProperties_userName": {
 			"type": "string",
@@ -27,27 +27,27 @@
 			"type": "string",
 			"defaultValue": "https://dlsdeveastus0001.dfs.core.windows.net/"
 		},
-		"everyday_11AM_properties_01_extract_from_api_parameters_exclude_system_fields": {
+		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_exclude_system_fields": {
 			"type": "string",
 			"defaultValue": "False"
 		},
-		"everyday_11AM_properties_01_extract_from_api_parameters_limit": {
+		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_limit": {
 			"type": "string",
 			"defaultValue": "9999999999"
 		},
-		"everyday_11AM_properties_01_extract_from_api_parameters_where": {
+		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_where_1": {
 			"type": "string",
 			"defaultValue": "report_datetime "
 		},
-		"everyday_11AM_properties_01_extract_from_api_parameters_dataset": {
+		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_dataset": {
 			"type": "string",
 			"defaultValue": "police_department"
 		},
-		"everyday_11AM_properties_01_extract_from_api_parameters_field_name": {
+		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_field_name_1": {
 			"type": "string",
 			"defaultValue": "report_datetime"
 		},
-		"everyday_11AM_properties_01_extract_from_api_parameters_response_format": {
+		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_response_format": {
 			"type": "string",
 			"defaultValue": ".json"
 		}
@@ -728,6 +728,9 @@
 						"type": "String"
 					}
 				},
+				"folder": {
+					"name": "OLD"
+				},
 				"annotations": [],
 				"lastPublishTime": "2023-05-31T11:11:59Z"
 			},
@@ -781,7 +784,7 @@
 						"type": "SetVariable",
 						"dependsOn": [
 							{
-								"activity": "trigger_time",
+								"activity": "insert_datetime",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -791,7 +794,7 @@
 						"typeProperties": {
 							"variableName": "trigger_time_year",
 							"value": {
-								"value": "@formatDateTime(variables('trigger_time'), 'yyyy')",
+								"value": "@formatDateTime(variables('insert_datetime'), 'yyyy')",
 								"type": "Expression"
 							}
 						}
@@ -801,7 +804,7 @@
 						"type": "SetVariable",
 						"dependsOn": [
 							{
-								"activity": "trigger_time",
+								"activity": "insert_datetime",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -811,13 +814,13 @@
 						"typeProperties": {
 							"variableName": "trigger_time_month",
 							"value": {
-								"value": "@formatDateTime(variables('trigger_time'), 'MM')",
+								"value": "@formatDateTime(variables('insert_datetime'), 'MM')",
 								"type": "Expression"
 							}
 						}
 					},
 					{
-						"name": "Fetch Data From Socrata Api to Blob Storage Gen2",
+						"name": "Socrata Api to Blob Storage Gen2",
 						"type": "Copy",
 						"dependsOn": [
 							{
@@ -869,8 +872,8 @@
 										"value": "@pipeline().parameters.limit",
 										"type": "Expression"
 									},
-									"where": {
-										"value": "@pipeline().parameters.where",
+									"where_1": {
+										"value": "@pipeline().parameters.where_1",
 										"type": "Expression"
 									},
 									"start_date": {
@@ -879,6 +882,10 @@
 									},
 									"end_date": {
 										"value": "@variables('end_date')",
+										"type": "Expression"
+									},
+									"where_2": {
+										"value": "@pipeline().parameters.where_2",
 										"type": "Expression"
 									}
 								}
@@ -948,7 +955,7 @@
 								]
 							},
 							{
-								"activity": "Union Log",
+								"activity": "Watermark unified",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -990,17 +997,17 @@
 						"typeProperties": {
 							"variableName": "file_name",
 							"value": {
-								"value": "@concat(concat(concat(concat(variables('unix_trigger_time'),'_'),pipeline().parameters.field_name,'_'),formatDateTime(replace(variables('start_date'),'''',''), 'yyyyMMdd')),pipeline().parameters.response_format)",
+								"value": "@concat(concat(concat(concat(concat(concat(variables('unix_trigger_time'),'_'),pipeline().parameters.field_name_1,'_'),pipeline().parameters.field_name_2),'_'),formatDateTime(replace(variables('start_date'),'''',''), 'yyyyMMdd')),pipeline().parameters.response_format)",
 								"type": "Expression"
 							}
 						}
 					},
 					{
-						"name": "Copy trigger_time to Blob",
+						"name": "Copy watermark to blob",
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "trigger_time",
+								"activity": "insert_datetime",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1028,7 +1035,7 @@
 									{
 										"name": "insert_datetime_",
 										"value": {
-											"value": "@variables('trigger_time')",
+											"value": "@addDays(variables('insert_datetime'),1)",
 											"type": "Expression"
 										}
 									}
@@ -1103,11 +1110,11 @@
 						]
 					},
 					{
-						"name": "Union Log",
+						"name": "Watermark unified",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [
 							{
-								"activity": "Copy trigger_time to Blob",
+								"activity": "Copy watermark to blob",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1123,7 +1130,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "Append trigger_time",
+								"referenceName": "01_append_trigger_time_bronze",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -1146,7 +1153,7 @@
 						"type": "SetVariable",
 						"dependsOn": [
 							{
-								"activity": "trigger_time",
+								"activity": "insert_datetime",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1156,7 +1163,7 @@
 						"typeProperties": {
 							"variableName": "start_date",
 							"value": {
-								"value": "@concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T00:00:00'''))",
+								"value": "@concat('''',concat(formatDateTime(variables('insert_datetime'), 'yyyy-MM-dd'),'T00:00:00'''))",
 								"type": "Expression"
 							}
 						}
@@ -1166,7 +1173,7 @@
 						"type": "SetVariable",
 						"dependsOn": [
 							{
-								"activity": "trigger_time",
+								"activity": "insert_datetime",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1176,7 +1183,59 @@
 						"typeProperties": {
 							"variableName": "end_date",
 							"value": {
-								"value": "@concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T23:59:59'''))",
+								"value": "@concat('''',concat(formatDateTime(variables('insert_datetime'), 'yyyy-MM-dd'),'T23:59:59'''))",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "ReadLogSource",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "LogSource",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "insert_datetime",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ReadLogSource",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "insert_datetime",
+							"value": {
+								"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,28)",
 								"type": "Expression"
 							}
 						}
@@ -1195,21 +1254,29 @@
 						"type": "string",
 						"defaultValue": "9999999999"
 					},
-					"where": {
+					"where_1": {
 						"type": "string",
-						"defaultValue": "report_datetime "
+						"defaultValue": ":created_at "
 					},
 					"dataset": {
 						"type": "string",
 						"defaultValue": "police_department"
 					},
-					"field_name": {
+					"field_name_1": {
 						"type": "string",
-						"defaultValue": "report_datetime"
+						"defaultValue": "created_at"
 					},
 					"response_format": {
 						"type": "string",
 						"defaultValue": ".json"
+					},
+					"field_name_2": {
+						"type": "string",
+						"defaultValue": "updated_at"
+					},
+					"where_2": {
+						"type": "string",
+						"defaultValue": ":updated_at "
 					}
 				},
 				"variables": {
@@ -1243,6 +1310,9 @@
 					},
 					"end_date": {
 						"type": "String"
+					},
+					"insert_datetime": {
+						"type": "String"
 					}
 				},
 				"annotations": [],
@@ -1252,7 +1322,8 @@
 				"[concat(variables('factoryId'), '/datasets/RestResourcePoliceDepartment')]",
 				"[concat(variables('factoryId'), '/datasets/ResponseJsonPoliceDepartment')]",
 				"[concat(variables('factoryId'), '/datasets/LogSourceTemplate')]",
-				"[concat(variables('factoryId'), '/dataflows/Append trigger_time')]"
+				"[concat(variables('factoryId'), '/dataflows/01_append_trigger_time_bronze')]",
+				"[concat(variables('factoryId'), '/datasets/LogSource')]"
 			]
 		},
 		{
@@ -1414,7 +1485,7 @@
 										"value": "@pipeline().parameters.limit",
 										"type": "Expression"
 									},
-									"where": {
+									"where_1": {
 										"value": "@pipeline().parameters.where",
 										"type": "Expression"
 									},
@@ -1425,7 +1496,8 @@
 									"end_date": {
 										"value": "@pipeline().parameters.end_date",
 										"type": "Expression"
-									}
+									},
+									"where_2": "a"
 								}
 							}
 						],
@@ -1687,6 +1759,9 @@
 						"type": "String"
 					}
 				},
+				"folder": {
+					"name": "OLD"
+				},
 				"annotations": [],
 				"lastPublishTime": "2023-06-03T22:58:48Z"
 			},
@@ -1828,7 +1903,7 @@
 										"value": "@pipeline().parameters.limit",
 										"type": "Expression"
 									},
-									"where": {
+									"where_1": {
 										"value": "@pipeline().parameters.where",
 										"type": "Expression"
 									},
@@ -1839,7 +1914,8 @@
 									"end_date": {
 										"value": "@pipeline().parameters.end_date",
 										"type": "Expression"
-									}
+									},
+									"where_2": "a"
 								}
 							}
 						],
@@ -2122,6 +2198,9 @@
 						"type": "String"
 					}
 				},
+				"folder": {
+					"name": "OLD"
+				},
 				"annotations": [],
 				"lastPublishTime": "2023-06-03T22:58:49Z"
 			},
@@ -2129,6 +2208,141 @@
 				"[concat(variables('factoryId'), '/datasets/RestResourcePoliceDepartment')]",
 				"[concat(variables('factoryId'), '/datasets/ResponseJsonPoliceDepartment')]",
 				"[concat(variables('factoryId'), '/dataflows/current_datetime_OLD')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/02_validate_extraction')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ReadLogSource",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "LogSource",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "insert_datetime",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "ReadLogSource",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "insert_datetime",
+							"value": {
+								"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,28)",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "datetime_year",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "insert_datetime",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "datetime_year",
+							"value": {
+								"value": "@formatDateTime(variables('insert_datetime'),'yyyy')",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"insert_datetime": {
+						"type": "String"
+					},
+					"datetime_year": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/LogSource')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LogSource')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "dls_socrata_api",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ingestion_api_socrata.log",
+						"folderPath": "01-raw",
+						"fileSystem": "execution-logs"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "processing_mode",
+						"type": "String"
+					},
+					{
+						"name": "insert_datetime",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/dls_socrata_api')]"
 			]
 		},
 		{
@@ -2146,6 +2360,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": "ingestion_api_socrata_template.log",
+						"folderPath": "01-raw",
 						"fileSystem": "execution-logs"
 					},
 					"columnDelimiter": ",",
@@ -2182,6 +2397,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "OLD"
+				},
 				"annotations": [],
 				"type": "Json",
 				"typeProperties": {
@@ -2217,6 +2435,9 @@
 					"dataset": {
 						"type": "string"
 					}
+				},
+				"folder": {
+					"name": "OLD"
 				},
 				"annotations": [],
 				"type": "Json",
@@ -2415,6 +2636,9 @@
 						"type": "string"
 					}
 				},
+				"folder": {
+					"name": "OLD"
+				},
 				"annotations": [],
 				"type": "Json",
 				"typeProperties": {
@@ -2552,8 +2776,8 @@
 							"value": "@dataset().limit",
 							"type": "Expression"
 						},
-						"where": {
-							"value": "@dataset().where",
+						"where_1": {
+							"value": "@dataset().where_1",
 							"type": "Expression"
 						},
 						"start_date": {
@@ -2562,6 +2786,10 @@
 						},
 						"end_date": {
 							"value": "@dataset().end_date",
+							"type": "Expression"
+						},
+						"where_2": {
+							"value": "@dataset().where_2",
 							"type": "Expression"
 						}
 					}
@@ -2573,13 +2801,16 @@
 					"limit": {
 						"type": "string"
 					},
-					"where": {
+					"where_1": {
 						"type": "string"
 					},
 					"start_date": {
 						"type": "string"
 					},
 					"end_date": {
+						"type": "string"
+					},
+					"where_2": {
 						"type": "string"
 					}
 				},
@@ -2590,43 +2821,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/RestApiSocrataService')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/log')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "dls_socrata_api",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "ingestion_api_socrata.log",
-						"fileSystem": "execution-logs"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "processing_mode",
-						"type": "String"
-					},
-					{
-						"name": "insert_datetime",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/dls_socrata_api')]"
 			]
 		},
 		{
@@ -2642,13 +2836,16 @@
 					"limit": {
 						"type": "string"
 					},
-					"where": {
+					"where_1": {
 						"type": "string"
 					},
 					"start_date": {
 						"type": "string"
 					},
 					"end_date": {
+						"type": "string"
+					},
+					"where_2": {
 						"type": "string"
 					}
 				},
@@ -2685,7 +2882,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/everyday_11AM')]",
+			"name": "[concat(parameters('factoryName'), '/everyday_11AM_Brasilia')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2698,12 +2895,12 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"exclude_system_fields": "[parameters('everyday_11AM_properties_01_extract_from_api_parameters_exclude_system_fields')]",
-							"limit": "[parameters('everyday_11AM_properties_01_extract_from_api_parameters_limit')]",
-							"where": "[parameters('everyday_11AM_properties_01_extract_from_api_parameters_where')]",
-							"dataset": "[parameters('everyday_11AM_properties_01_extract_from_api_parameters_dataset')]",
-							"field_name": "[parameters('everyday_11AM_properties_01_extract_from_api_parameters_field_name')]",
-							"response_format": "[parameters('everyday_11AM_properties_01_extract_from_api_parameters_response_format')]"
+							"exclude_system_fields": "[parameters('everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_exclude_system_fields')]",
+							"limit": "[parameters('everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_limit')]",
+							"where_1": "[parameters('everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_where_1')]",
+							"dataset": "[parameters('everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_dataset')]",
+							"field_name_1": "[parameters('everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_field_name_1')]",
+							"response_format": "[parameters('everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_response_format')]"
 						}
 					}
 				],
@@ -2712,8 +2909,8 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2023-06-04T11:00:00Z",
-						"timeZone": "UTC"
+						"startTime": "2023-06-05T11:00:00",
+						"timeZone": "E. South America Standard Time"
 					}
 				}
 			},
@@ -2722,7 +2919,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Append trigger_time')]",
+			"name": "[concat(parameters('factoryName'), '/01_append_trigger_time_bronze')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2738,7 +2935,7 @@
 						},
 						{
 							"dataset": {
-								"referenceName": "log",
+								"referenceName": "LogSource",
 								"type": "DatasetReference"
 							},
 							"name": "LogSource"
@@ -2747,7 +2944,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "log",
+								"referenceName": "LogSource",
 								"type": "DatasetReference"
 							},
 							"name": "LogLoad"
@@ -2792,11 +2989,11 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/LogSourceTemplate')]",
-				"[concat(variables('factoryId'), '/datasets/log')]"
+				"[concat(variables('factoryId'), '/datasets/LogSource')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/current_datetime_OLD')]",
+			"name": "[concat(parameters('factoryName'), '/01_append_trigger_time_silver')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2805,7 +3002,14 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "log",
+								"referenceName": "LogSourceTemplate",
+								"type": "DatasetReference"
+							},
+							"name": "LogSourceTemplate"
+						},
+						{
+							"dataset": {
+								"referenceName": "LogSource",
 								"type": "DatasetReference"
 							},
 							"name": "LogSource"
@@ -2814,7 +3018,77 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "log",
+								"referenceName": "LogSource",
+								"type": "DatasetReference"
+							},
+							"name": "LogLoad"
+						}
+					],
+					"transformations": [
+						{
+							"name": "union1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          processing_mode as string,",
+						"          insert_datetime as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> LogSourceTemplate",
+						"source(output(",
+						"          processing_mode as string,",
+						"          insert_datetime as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false) ~> LogSource",
+						"LogSource, LogSourceTemplate union(byName: false)~> union1",
+						"union1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          processing_mode as string,",
+						"          insert_datetime as string",
+						"     ),",
+						"     partitionFileNames:['ingestion_api_socrata.log'],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     partitionBy('hash', 1)) ~> LogLoad"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/LogSourceTemplate')]",
+				"[concat(variables('factoryId'), '/datasets/LogSource')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/current_datetime_OLD')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"folder": {
+					"name": "OLD"
+				},
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "LogSource",
+								"type": "DatasetReference"
+							},
+							"name": "LogSource"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "LogSource",
 								"type": "DatasetReference"
 							},
 							"name": "loadLoad"
@@ -2856,7 +3130,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/log')]"
+				"[concat(variables('factoryId'), '/datasets/LogSource')]"
 			]
 		},
 		{
@@ -2864,12 +3138,15 @@
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
+				"folder": {
+					"name": "OLD"
+				},
 				"type": "MappingDataFlow",
 				"typeProperties": {
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "log",
+								"referenceName": "LogSource",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -2922,7 +3199,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/log')]"
+				"[concat(variables('factoryId'), '/datasets/LogSource')]"
 			]
 		}
 	]
