@@ -908,10 +908,6 @@
 										"value": "@variables('trigger_time_month')",
 										"type": "Expression"
 									},
-									"field_name": {
-										"value": "@variables('file_name')",
-										"type": "Expression"
-									},
 									"response_format": {
 										"value": "@pipeline().parameters.response_format",
 										"type": "Expression"
@@ -1518,10 +1514,6 @@
 										"value": "@variables('trigger_time_month')",
 										"type": "Expression"
 									},
-									"field_name": {
-										"value": "@pipeline().parameters.field_name",
-										"type": "Expression"
-									},
 									"response_format": {
 										"value": "@pipeline().parameters.response_format",
 										"type": "Expression"
@@ -1934,10 +1926,6 @@
 									},
 									"trigger_time_month": {
 										"value": "@variables('trigger_time_month')",
-										"type": "Expression"
-									},
-									"field_name": {
-										"value": "@pipeline().parameters.field_name",
 										"type": "Expression"
 									},
 									"response_format": {
@@ -2585,9 +2573,6 @@
 					"trigger_time_month": {
 						"type": "string"
 					},
-					"field_name": {
-						"type": "string"
-					},
 					"response_format": {
 						"type": "string"
 					},
@@ -2607,7 +2592,7 @@
 					"location": {
 						"type": "AzureBlobFSLocation",
 						"fileName": {
-							"value": "@dataset().field_name",
+							"value": "@dataset().file_name",
 							"type": "Expression"
 						},
 						"fileSystem": {
@@ -2910,8 +2895,7 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2023-06-05T14:00:00",
-						"timeZone": "E. South America Standard Time",
-						"schedule": {}
+						"timeZone": "E. South America Standard Time"
 					}
 				}
 			},
