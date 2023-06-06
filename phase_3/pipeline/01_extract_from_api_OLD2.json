@@ -139,7 +139,8 @@
 							"end_date": {
 								"value": "@pipeline().parameters.end_date",
 								"type": "Expression"
-							}
+							},
+							"where_2": "a"
 						}
 					}
 				],
