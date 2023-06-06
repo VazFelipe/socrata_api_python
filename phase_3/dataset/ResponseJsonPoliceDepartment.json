@@ -15,9 +15,6 @@
 			"trigger_time_month": {
 				"type": "string"
 			},
-			"field_name": {
-				"type": "string"
-			},
 			"response_format": {
 				"type": "string"
 			},
