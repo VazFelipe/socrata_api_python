@@ -48,7 +48,7 @@
 				"typeProperties": {
 					"variableName": "insert_time",
 					"value": {
-						"value": "@last(activity('ReadLogSource').output.value[0].insert_datetime)",
+						"value": "@json(activity('ReadLogSource').output.value[0]).value",
 						"type": "Expression"
 					}
 				}
