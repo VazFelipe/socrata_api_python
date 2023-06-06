@@ -1,12 +1,16 @@
 {
-	"name": "current_datetime_OLD",
+	"name": "01_append_trigger_time_bronze",
 	"properties": {
-		"folder": {
-			"name": "OLD"
-		},
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
+				{
+					"dataset": {
+						"referenceName": "LogSourceTemplate",
+						"type": "DatasetReference"
+					},
+					"name": "LogSourceTemplate"
+				},
 				{
 					"dataset": {
 						"referenceName": "LogSource",
@@ -21,13 +25,10 @@
 						"referenceName": "LogSource",
 						"type": "DatasetReference"
 					},
-					"name": "loadLoad"
+					"name": "LogLoad"
 				}
 			],
 			"transformations": [
-				{
-					"name": "currentdatetime"
-				},
 				{
 					"name": "union1"
 				}
@@ -39,10 +40,15 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> LogSourceTemplate",
+				"source(output(",
+				"          processing_mode as string,",
+				"          insert_datetime as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> LogSource",
-				"LogSource derive(processing_mode = toString('FULL LOAD'),",
-				"          insert_datetime = concat(concat(concat(toString(currentTimestamp(), 'yyyy-MM-dd', 'UTC', 'en-US'),'T'),toString(currentTimestamp(), 'HH:mm:ss.SSSSSSS', 'UTC', 'en-US')),'Z')) ~> currentdatetime",
-				"currentdatetime, LogSource union(byName: true)~> union1",
+				"LogSource, LogSourceTemplate union(byName: false)~> union1",
 				"union1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -55,7 +61,7 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> loadLoad"
+				"     partitionBy('hash', 1)) ~> LogLoad"
 			]
 		}
 	}

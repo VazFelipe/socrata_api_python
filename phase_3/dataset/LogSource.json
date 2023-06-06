@@ -1,5 +1,5 @@
 {
-	"name": "log",
+	"name": "LogSource",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "dls_socrata_api",
@@ -11,6 +11,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "ingestion_api_socrata.log",
+				"folderPath": "01-raw",
 				"fileSystem": "execution-logs"
 			},
 			"columnDelimiter": ",",

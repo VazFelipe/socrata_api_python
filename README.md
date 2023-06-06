@@ -118,7 +118,7 @@ main.py
 
 This parametrized template developed here ingest raw data from the City and County of San Francisco using Socrata Open Data API. The San Francisco Police Department's (SFPD) Incident Report Dataset is one of the most used reports for crime analysis. See the literature [here](https://www.sanfranciscopolice.org/sites/default/files/2022-11/SFPDQADRReport-2ndQuarter-20221129.pdf) and [here](https://scholar.google.com.br/scholar?hl=pt-BR&as_sdt=0%2C5&q=The+San+Francisco+Police+Department%E2%80%99s+%28SFPD%29+Incident+Report+Dataset&btnG=).
 
-The holistic workflow presented below executes everyday at 11AM UTC, flag the trigger time as a watermark and store it in the /execution_logs/ingestion_api_socrata.log. Then, the next execution starts from the last execution time in the log. This techinique is well documented [here](https://dwbi1.wordpress.com/2022/05/22/watermark-in-data-warehousing/) and [here](https://learn.microsoft.com/en-us/azure/data-factory/tutorial-incremental-copy-overview). 
+The holistic workflow presented below executes everyday at 11AM UTC, flag the trigger time as a watermark and store it in the /execution_logs/ingestion_api_socrata.log. Then, the next execution starts from the last execution time in the log. This technique called watermark is well documented [here](https://dwbi1.wordpress.com/2022/05/22/watermark-in-data-warehousing/) and [here](https://learn.microsoft.com/en-us/azure/data-factory/tutorial-incremental-copy-overview). 
 
 Bronze Layer
 

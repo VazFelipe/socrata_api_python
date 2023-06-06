@@ -40,7 +40,7 @@
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "trigger_time",
+						"activity": "insert_datetime",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -50,7 +50,7 @@
 				"typeProperties": {
 					"variableName": "trigger_time_year",
 					"value": {
-						"value": "@formatDateTime(variables('trigger_time'), 'yyyy')",
+						"value": "@formatDateTime(variables('insert_datetime'), 'yyyy')",
 						"type": "Expression"
 					}
 				}
@@ -60,7 +60,7 @@
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "trigger_time",
+						"activity": "insert_datetime",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -70,13 +70,13 @@
 				"typeProperties": {
 					"variableName": "trigger_time_month",
 					"value": {
-						"value": "@formatDateTime(variables('trigger_time'), 'MM')",
+						"value": "@formatDateTime(variables('insert_datetime'), 'MM')",
 						"type": "Expression"
 					}
 				}
 			},
 			{
-				"name": "Fetch Data From Socrata Api to Blob Storage Gen2",
+				"name": "Socrata Api to Blob Storage Gen2",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -128,8 +128,8 @@
 								"value": "@pipeline().parameters.limit",
 								"type": "Expression"
 							},
-							"where": {
-								"value": "@pipeline().parameters.where",
+							"where_1": {
+								"value": "@pipeline().parameters.where_1",
 								"type": "Expression"
 							},
 							"start_date": {
@@ -138,6 +138,10 @@
 							},
 							"end_date": {
 								"value": "@variables('end_date')",
+								"type": "Expression"
+							},
+							"where_2": {
+								"value": "@pipeline().parameters.where_2",
 								"type": "Expression"
 							}
 						}
@@ -249,7 +253,7 @@
 				"typeProperties": {
 					"variableName": "file_name",
 					"value": {
-						"value": "@concat(concat(concat(concat(variables('unix_trigger_time'),'_'),pipeline().parameters.field_name,'_'),formatDateTime(replace(variables('start_date'),'''',''), 'yyyyMMdd')),pipeline().parameters.response_format)",
+						"value": "@concat(concat(concat(concat(concat(concat(variables('unix_trigger_time'),'_'),pipeline().parameters.field_name_1,'_'),pipeline().parameters.field_name_2),'_'),formatDateTime(replace(variables('start_date'),'''',''), 'yyyyMMdd')),pipeline().parameters.response_format)",
 						"type": "Expression"
 					}
 				}
@@ -259,7 +263,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "trigger_time",
+						"activity": "insert_datetime",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -287,7 +291,7 @@
 							{
 								"name": "insert_datetime_",
 								"value": {
-									"value": "@variables('trigger_time')",
+									"value": "@addDays(variables('insert_datetime'),1)",
 									"type": "Expression"
 								}
 							}
@@ -380,7 +384,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "Append trigger_time",
+						"referenceName": "01_append_trigger_time_bronze",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -396,7 +400,7 @@
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "trigger_time",
+						"activity": "insert_datetime",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -406,7 +410,7 @@
 				"typeProperties": {
 					"variableName": "start_date",
 					"value": {
-						"value": "@concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T00:00:00'''))",
+						"value": "@concat('''',concat(formatDateTime(variables('insert_datetime'), 'yyyy-MM-dd'),'T00:00:00'''))",
 						"type": "Expression"
 					}
 				}
@@ -416,7 +420,7 @@
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "trigger_time",
+						"activity": "insert_datetime",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -426,7 +430,58 @@
 				"typeProperties": {
 					"variableName": "end_date",
 					"value": {
-						"value": "@concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T23:59:59'''))",
+						"value": "@concat('''',concat(formatDateTime(variables('insert_datetime'), 'yyyy-MM-dd'),'T23:59:59'''))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ReadLogSource",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "LogSource",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "insert_datetime",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ReadLogSource",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "insert_datetime",
+					"value": {
+						"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,28)",
 						"type": "Expression"
 					}
 				}
@@ -441,21 +496,29 @@
 				"type": "string",
 				"defaultValue": "9999999999"
 			},
-			"where": {
+			"where_1": {
 				"type": "string",
-				"defaultValue": "report_datetime "
+				"defaultValue": ":created_at "
 			},
 			"dataset": {
 				"type": "string",
 				"defaultValue": "police_department"
 			},
-			"field_name": {
+			"field_name_1": {
 				"type": "string",
-				"defaultValue": "report_datetime"
+				"defaultValue": "created_at"
 			},
 			"response_format": {
 				"type": "string",
 				"defaultValue": ".json"
+			},
+			"field_name_2": {
+				"type": "string",
+				"defaultValue": "updated_at"
+			},
+			"where_2": {
+				"type": "string",
+				"defaultValue": ":updated_at "
 			}
 		},
 		"variables": {
@@ -488,6 +551,9 @@
 				"type": "String"
 			},
 			"end_date": {
+				"type": "String"
+			},
+			"insert_datetime": {
 				"type": "String"
 			}
 		},

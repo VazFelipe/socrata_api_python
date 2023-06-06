@@ -1,5 +1,5 @@
 {
-	"name": "everyday_2PM_UTC",
+	"name": "everyday_11AM_Brasilia",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
@@ -12,9 +12,9 @@
 				"parameters": {
 					"exclude_system_fields": "False",
 					"limit": "9999999999",
-					"where": "report_datetime ",
+					"where_1": "report_datetime ",
 					"dataset": "police_department",
-					"field_name": "report_datetime",
+					"field_name_1": "report_datetime",
 					"response_format": ".json"
 				}
 			}
@@ -24,8 +24,8 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2023-06-04T14:00:00Z",
-				"timeZone": "UTC"
+				"startTime": "2023-06-05T11:00:00",
+				"timeZone": "E. South America Standard Time"
 			}
 		}
 	}
