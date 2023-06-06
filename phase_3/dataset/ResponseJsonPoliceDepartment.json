@@ -37,7 +37,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@dataset().field_name",
+					"value": "@dataset().file_name",
 					"type": "Expression"
 				},
 				"fileSystem": {
