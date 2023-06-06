@@ -20,22 +20,22 @@
 		"dls_socrata_api_properties_typeProperties_url": {
 			"value": "https://dlsdeveastus0001.dfs.core.windows.net/"
 		},
-		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_exclude_system_fields": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_exclude_system_fields": {
 			"value": "False"
 		},
-		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_limit": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_limit": {
 			"value": "9999999999"
 		},
-		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_where_1": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_1": {
 			"value": "report_datetime "
 		},
-		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_dataset": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_dataset": {
 			"value": "police_department"
 		},
-		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_field_name_1": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_1": {
 			"value": "report_datetime"
 		},
-		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_response_format": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_response_format": {
 			"value": ".json"
 		},
 		"containerUri": {

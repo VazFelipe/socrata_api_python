@@ -27,27 +27,27 @@
 			"type": "string",
 			"defaultValue": "https://dlsdeveastus0001.dfs.core.windows.net/"
 		},
-		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_exclude_system_fields": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_exclude_system_fields": {
 			"type": "string",
 			"defaultValue": "False"
 		},
-		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_limit": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_limit": {
 			"type": "string",
 			"defaultValue": "9999999999"
 		},
-		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_where_1": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_1": {
 			"type": "string",
 			"defaultValue": "report_datetime "
 		},
-		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_dataset": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_dataset": {
 			"type": "string",
 			"defaultValue": "police_department"
 		},
-		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_field_name_1": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_1": {
 			"type": "string",
 			"defaultValue": "report_datetime"
 		},
-		"everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_response_format": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_response_format": {
 			"type": "string",
 			"defaultValue": ".json"
 		}
@@ -2882,7 +2882,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/everyday_11AM_Brasilia')]",
+			"name": "[concat(parameters('factoryName'), '/everyday_2PM_Brasilia')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2895,12 +2895,12 @@
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"exclude_system_fields": "[parameters('everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_exclude_system_fields')]",
-							"limit": "[parameters('everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_limit')]",
-							"where_1": "[parameters('everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_where_1')]",
-							"dataset": "[parameters('everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_dataset')]",
-							"field_name_1": "[parameters('everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_field_name_1')]",
-							"response_format": "[parameters('everyday_11AM_Brasilia_properties_01_extract_from_api_parameters_response_format')]"
+							"exclude_system_fields": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_exclude_system_fields')]",
+							"limit": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_limit')]",
+							"where_1": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_1')]",
+							"dataset": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_dataset')]",
+							"field_name_1": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_1')]",
+							"response_format": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_response_format')]"
 						}
 					}
 				],
@@ -2909,8 +2909,9 @@
 					"recurrence": {
 						"frequency": "Day",
 						"interval": 1,
-						"startTime": "2023-06-05T11:00:00",
-						"timeZone": "E. South America Standard Time"
+						"startTime": "2023-06-05T14:00:00",
+						"timeZone": "E. South America Standard Time",
+						"schedule": {}
 					}
 				}
 			},
