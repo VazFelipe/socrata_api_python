@@ -117,7 +117,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "RestResourcePoliceDepartment",
+						"referenceName": "SFPD_restapi",
 						"type": "DatasetReference",
 						"parameters": {
 							"exclude_system_fields": {
@@ -149,7 +149,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ResponseJsonPoliceDepartment",
+						"referenceName": "SFPD_response",
 						"type": "DatasetReference",
 						"parameters": {
 							"dataset": {
@@ -348,13 +348,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "LogSourceTemplate",
+						"referenceName": "SFPD_log_template_raw",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "LogSourceTemplate",
+						"referenceName": "SFPD_log_template_raw",
 						"type": "DatasetReference"
 					}
 				]
@@ -456,7 +456,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "LogSource",
+						"referenceName": "SFPD_log_raw",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false

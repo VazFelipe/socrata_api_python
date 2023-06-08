@@ -1,5 +1,5 @@
 {
-	"name": "LogSource",
+	"name": "SFPD_log_raw",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "dls_socrata_api",

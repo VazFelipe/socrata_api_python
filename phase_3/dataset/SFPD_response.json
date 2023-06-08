@@ -1,5 +1,5 @@
 {
-	"name": "ResponseJsonPoliceDepartment",
+	"name": "SFPD_response",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "dls_socrata_api",

@@ -144,7 +144,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "RestResourcePoliceDepartment",
+						"referenceName": "SFPD_restapi",
 						"type": "DatasetReference",
 						"parameters": {
 							"exclude_system_fields": {
@@ -173,7 +173,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ResponseJsonPoliceDepartment",
+						"referenceName": "SFPD_response",
 						"type": "DatasetReference",
 						"parameters": {
 							"dataset": {
@@ -186,10 +186,6 @@
 							},
 							"trigger_time_month": {
 								"value": "@variables('trigger_time_month')",
-								"type": "Expression"
-							},
-							"field_name": {
-								"value": "@pipeline().parameters.field_name",
 								"type": "Expression"
 							},
 							"response_format": {
