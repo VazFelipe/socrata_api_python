@@ -1776,7 +1776,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "file_name",
+								"activity": "url_api",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2187,6 +2187,26 @@
 								"type": "Expression"
 							}
 						}
+					},
+					{
+						"name": "url_api",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "file_name",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "url_api",
+							"value": {
+								"value": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',pipeline().parameters.exclude_system_fields),'&$limit='),pipeline().parameters.limit),'&$where='),pipeline().parameters.where_1),'BETWEEN '),variables('start_date')),' AND '), variables('end_date')),' OR '),pipeline().parameters.where_2),'BETWEEN '),variables('start_date')),' AND '), variables('end_date'))}",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"policy": {
@@ -2260,6 +2280,9 @@
 						"type": "String"
 					},
 					"insert_datetime": {
+						"type": "String"
+					},
+					"url_api": {
 						"type": "String"
 					}
 				},
