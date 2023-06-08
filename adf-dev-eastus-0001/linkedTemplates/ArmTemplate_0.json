@@ -17,7 +17,7 @@
 		},
 		"RestApiSocrataService_properties_typeProperties_url": {
 			"type": "string",
-			"defaultValue": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',linkedService().exclude_system_fields),'&$limit='),linkedService().limit),'&$where='),linkedService().where_1),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date),' OR '),linkedService().where_2),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date)}"
+			"defaultValue": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',linkedService().exclude_system_fields),'&$limit='),linkedService().limit),'&$where='),'('),linkedService().where_1),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date),') OR ('),linkedService().where_2),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date),')')}"
 		},
 		"RestApiSocrataService_properties_typeProperties_userName": {
 			"type": "string",
@@ -37,7 +37,7 @@
 		},
 		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_1": {
 			"type": "string",
-			"defaultValue": "report_datetime "
+			"defaultValue": ":created_at "
 		},
 		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_dataset": {
 			"type": "string",
@@ -45,11 +45,19 @@
 		},
 		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_1": {
 			"type": "string",
-			"defaultValue": "report_datetime"
+			"defaultValue": "created_at"
 		},
 		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_response_format": {
 			"type": "string",
 			"defaultValue": ".json"
+		},
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_2": {
+			"type": "string",
+			"defaultValue": "updated_at"
+		},
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_2": {
+			"type": "string",
+			"defaultValue": ":updated_at "
 		}
 	},
 	"variables": {
@@ -2203,7 +2211,7 @@
 						"typeProperties": {
 							"variableName": "url_api",
 							"value": {
-								"value": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',pipeline().parameters.exclude_system_fields),'&$limit='),pipeline().parameters.limit),'&$where='),pipeline().parameters.where_1),'BETWEEN '),variables('start_date')),' AND '), variables('end_date')),' OR '),pipeline().parameters.where_2),'BETWEEN '),variables('start_date')),' AND '), variables('end_date'))}",
+								"value": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',pipeline().parameters.exclude_system_fields),'&$limit='),pipeline().parameters.limit),'&$where='),'('),pipeline().parameters.where_1),'BETWEEN '),variables('start_date')),' AND '), variables('end_date')),') OR ('),pipeline().parameters.where_2),'BETWEEN '),variables('start_date')),' AND '), variables('end_date')),')')}",
 								"type": "Expression"
 							}
 						}
@@ -3192,7 +3200,9 @@
 							"where_1": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_1')]",
 							"dataset": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_dataset')]",
 							"field_name_1": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_1')]",
-							"response_format": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_response_format')]"
+							"response_format": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_response_format')]",
+							"field_name_2": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_2')]",
+							"where_2": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_2')]"
 						}
 					}
 				],
@@ -3202,7 +3212,8 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2023-06-05T14:00:00",
-						"timeZone": "E. South America Standard Time"
+						"timeZone": "E. South America Standard Time",
+						"schedule": {}
 					}
 				}
 			},

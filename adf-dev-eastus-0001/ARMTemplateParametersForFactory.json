@@ -12,7 +12,7 @@
 			"value": ""
 		},
 		"RestApiSocrataService_properties_typeProperties_url": {
-			"value": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',linkedService().exclude_system_fields),'&$limit='),linkedService().limit),'&$where='),linkedService().where_1),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date),' OR '),linkedService().where_2),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date)}"
+			"value": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',linkedService().exclude_system_fields),'&$limit='),linkedService().limit),'&$where='),'('),linkedService().where_1),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date),') OR ('),linkedService().where_2),'BETWEEN '),linkedService().start_date),' AND '), linkedService().end_date),')')}"
 		},
 		"RestApiSocrataService_properties_typeProperties_userName": {
 			"value": "2osd2wzioj43v7iymmfnt74x3"
@@ -27,16 +27,22 @@
 			"value": "9999999999"
 		},
 		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_1": {
-			"value": "report_datetime "
+			"value": ":created_at "
 		},
 		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_dataset": {
 			"value": "police_department"
 		},
 		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_1": {
-			"value": "report_datetime"
+			"value": "created_at"
 		},
 		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_response_format": {
 			"value": ".json"
+		},
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_2": {
+			"value": "updated_at"
+		},
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_2": {
+			"value": ":updated_at "
 		}
 	}
 }
