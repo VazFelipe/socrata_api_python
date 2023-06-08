@@ -12,10 +12,12 @@
 				"parameters": {
 					"exclude_system_fields": "False",
 					"limit": "9999999999",
-					"where_1": "report_datetime ",
+					"where_1": ":created_at ",
 					"dataset": "police_department",
-					"field_name_1": "report_datetime",
-					"response_format": ".json"
+					"field_name_1": "created_at",
+					"response_format": ".json",
+					"field_name_2": "updated_at",
+					"where_2": ":updated_at "
 				}
 			}
 		],
