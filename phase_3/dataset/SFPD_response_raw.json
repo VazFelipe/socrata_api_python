@@ -1,5 +1,5 @@
 {
-	"name": "SFPD_response",
+	"name": "SFPD_response_raw",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "dls_socrata_api",

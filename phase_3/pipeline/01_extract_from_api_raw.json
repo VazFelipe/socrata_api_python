@@ -1,5 +1,5 @@
 {
-	"name": "01_extract_from_api",
+	"name": "01_extract_from_api_raw",
 	"properties": {
 		"activities": [
 			{
@@ -117,7 +117,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SFPD_restapi",
+						"referenceName": "SFPD_restapi_raw",
 						"type": "DatasetReference",
 						"parameters": {
 							"exclude_system_fields": {
@@ -149,7 +149,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "SFPD_response",
+						"referenceName": "SFPD_response_raw",
 						"type": "DatasetReference",
 						"parameters": {
 							"dataset": {

@@ -6,7 +6,7 @@
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "01_extract_from_api",
+					"referenceName": "01_extract_from_api_raw",
 					"type": "PipelineReference"
 				},
 				"parameters": {

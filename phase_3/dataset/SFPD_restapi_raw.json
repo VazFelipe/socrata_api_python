@@ -1,5 +1,5 @@
 {
-	"name": "SFPD_restapi",
+	"name": "SFPD_restapi_raw",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "RestApiSocrataService",
