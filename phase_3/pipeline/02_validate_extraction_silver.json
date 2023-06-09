@@ -3,9 +3,16 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copyfrom raw to silver layer",
+				"name": "From raw to silver layer",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Watermark unified",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -188,7 +195,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "01_append_trigger_time_bronze",
+						"referenceName": "01_append_trigger_time_silver",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -245,7 +252,7 @@
 				"typeProperties": {
 					"variableName": "insert_datetime",
 					"value": {
-						"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,28)",
+						"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,20)",
 						"type": "Expression"
 					}
 				}
