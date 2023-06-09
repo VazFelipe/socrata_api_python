@@ -1342,7 +1342,7 @@
 						"typeProperties": {
 							"variableName": "insert_datetime",
 							"value": {
-								"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,28)",
+								"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,20)",
 								"type": "Expression"
 							}
 						}
