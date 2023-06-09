@@ -22,6 +22,10 @@
 					"value": "@dataset().file_name",
 					"type": "Expression"
 				},
+				"folderPath": {
+					"value": "@dataset().dataset",
+					"type": "Expression"
+				},
 				"fileSystem": "02-silver"
 			},
 			"compressionCodec": "snappy"
