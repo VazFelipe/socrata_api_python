@@ -1,0 +1,17 @@
+{
+	"name": "everyday_210PM_Brasilia",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-06-09T14:10:00",
+				"timeZone": "E. South America Standard Time"
+			}
+		}
+	}
+}
