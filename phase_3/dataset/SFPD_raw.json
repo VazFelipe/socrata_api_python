@@ -1,27 +1,15 @@
 {
-	"name": "ResponseRawParent",
+	"name": "SFPD_raw",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "dls_socrata_api",
 			"type": "LinkedServiceReference"
-		},
-		"parameters": {
-			"dataset": {
-				"type": "string"
-			}
-		},
-		"folder": {
-			"name": "OLD"
 		},
 		"annotations": [],
 		"type": "Json",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": {
-					"value": "@dataset().dataset",
-					"type": "Expression"
-				},
 				"fileSystem": "01-raw"
 			}
 		},
@@ -55,14 +43,14 @@
 				"incident_number": {
 					"type": "string"
 				},
-				"cad_number": {
-					"type": "string"
-				},
 				"report_type_code": {
 					"type": "string"
 				},
 				"report_type_description": {
 					"type": "string"
+				},
+				"filed_online": {
+					"type": "boolean"
 				},
 				"incident_code": {
 					"type": "string"
@@ -79,13 +67,25 @@
 				"resolution": {
 					"type": "string"
 				},
+				"police_district": {
+					"type": "string"
+				},
+				":id": {
+					"type": "string"
+				},
+				":created_at": {
+					"type": "string"
+				},
+				":updated_at": {
+					"type": "string"
+				},
+				"cad_number": {
+					"type": "string"
+				},
 				"intersection": {
 					"type": "string"
 				},
 				"cnn": {
-					"type": "string"
-				},
-				"police_district": {
 					"type": "string"
 				},
 				"analysis_neighborhood": {
@@ -116,18 +116,8 @@
 							}
 						}
 					}
-				},
-				":id": {
-					"type": "string"
-				},
-				":created_at": {
-					"type": "string"
-				},
-				":updated_at": {
-					"type": "string"
 				}
 			}
 		}
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+	}
 }

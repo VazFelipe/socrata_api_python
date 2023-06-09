@@ -1,0 +1,28 @@
+{
+	"name": "everyday_210PM_Brasilia",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "02_validate_extraction_silver",
+					"type": "PipelineReference"
+				},
+				"parameters": {
+					"file_name": "san_francisco_police_department.parquet",
+					"dataset": "police_department"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Day",
+				"interval": 1,
+				"startTime": "2023-06-09T14:10:00",
+				"timeZone": "E. South America Standard Time"
+			}
+		}
+	}
+}

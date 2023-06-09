@@ -1,5 +1,5 @@
 {
-	"name": "RestResourcePoliceDepartment",
+	"name": "SFPD_restapi_raw",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "RestApiSocrataService",
