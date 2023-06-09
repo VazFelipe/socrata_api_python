@@ -1,0 +1,31 @@
+{
+	"name": "SFPD_parquet_silver",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "dls_socrata_api",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"file_name": {
+				"type": "string"
+			},
+			"dataset": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().file_name",
+					"type": "Expression"
+				},
+				"fileSystem": "02-silver"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
