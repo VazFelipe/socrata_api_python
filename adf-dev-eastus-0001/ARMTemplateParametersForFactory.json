@@ -20,28 +20,34 @@
 		"dls_socrata_api_properties_typeProperties_url": {
 			"value": "https://dlsdeveastus0001.dfs.core.windows.net/"
 		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_exclude_system_fields": {
-			"value": "False"
+		"everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_file_name": {
+			"value": "san_francisco_police_department.parquet"
 		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_limit": {
-			"value": "9999999999"
-		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_1": {
-			"value": ":created_at "
-		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_dataset": {
+		"everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_dataset": {
 			"value": "police_department"
 		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_1": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_exclude_system_fields": {
+			"value": "False"
+		},
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_limit": {
+			"value": "9999999999"
+		},
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_where_1": {
+			"value": ":created_at "
+		},
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_dataset": {
+			"value": "police_department"
+		},
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_field_name_1": {
 			"value": "created_at"
 		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_response_format": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_response_format": {
 			"value": ".json"
 		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_2": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_field_name_2": {
 			"value": "updated_at"
 		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_2": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_where_2": {
 			"value": ":updated_at "
 		}
 	}

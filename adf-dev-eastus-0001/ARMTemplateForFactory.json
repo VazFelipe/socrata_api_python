@@ -27,35 +27,43 @@
 			"type": "string",
 			"defaultValue": "https://dlsdeveastus0001.dfs.core.windows.net/"
 		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_exclude_system_fields": {
+		"everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_file_name": {
 			"type": "string",
-			"defaultValue": "False"
+			"defaultValue": "san_francisco_police_department.parquet"
 		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_limit": {
-			"type": "string",
-			"defaultValue": "9999999999"
-		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_1": {
-			"type": "string",
-			"defaultValue": ":created_at "
-		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_dataset": {
+		"everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_dataset": {
 			"type": "string",
 			"defaultValue": "police_department"
 		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_1": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_exclude_system_fields": {
+			"type": "string",
+			"defaultValue": "False"
+		},
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_limit": {
+			"type": "string",
+			"defaultValue": "9999999999"
+		},
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_where_1": {
+			"type": "string",
+			"defaultValue": ":created_at "
+		},
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_dataset": {
+			"type": "string",
+			"defaultValue": "police_department"
+		},
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_field_name_1": {
 			"type": "string",
 			"defaultValue": "created_at"
 		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_response_format": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_response_format": {
 			"type": "string",
 			"defaultValue": ".json"
 		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_2": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_field_name_2": {
 			"type": "string",
 			"defaultValue": "updated_at"
 		},
-		"everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_2": {
+		"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_where_2": {
 			"type": "string",
 			"defaultValue": ":updated_at "
 		}
@@ -65,691 +73,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/00_get_metadata_from_blob_OLD')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Get Metadata 01_raw",
-						"type": "GetMetadata",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "ReponseRaw",
-								"type": "DatasetReference",
-								"parameters": {
-									"dataset": "police_department"
-								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "JsonReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEach dls 01_raw",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Metadata 01_raw",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get Metadata 01_raw').output.childItems",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Get Metadata 01_raw 2",
-									"type": "GetMetadata",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataset": {
-											"referenceName": "ResponseJsonPD",
-											"type": "DatasetReference",
-											"parameters": {
-												"file_name": {
-													"value": "@item().Name",
-													"type": "Expression"
-												},
-												"dataset": {
-													"value": "@pipeline().parameters.dataset",
-													"type": "Expression"
-												}
-											}
-										},
-										"fieldList": [
-											"lastModified",
-											"itemName"
-										],
-										"storeSettings": {
-											"type": "AzureBlobFSReadSettings",
-											"recursive": true,
-											"enablePartitionDiscovery": false
-										},
-										"formatSettings": {
-											"type": "JsonReadSettings"
-										}
-									}
-								},
-								{
-									"name": "If Condition last_modified",
-									"type": "IfCondition",
-									"dependsOn": [
-										{
-											"activity": "Get Metadata 01_raw 2",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@greater(activity('Get Metadata 01_raw 2').output.lastModified, variables('year'))",
-											"type": "Expression"
-										},
-										"ifTrueActivities": [
-											{
-												"name": "year",
-												"type": "SetVariable",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "year",
-													"value": {
-														"value": "@activity('Get Metadata 01_raw 2').output.itemName",
-														"type": "Expression"
-													}
-												}
-											}
-										]
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "dataset_parent_year",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ForEach dls 01_raw",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "dataset_parent_year",
-							"value": {
-								"value": "@concat(concat(pipeline().parameters.dataset,'/'),variables('year'))",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Get Metadata1",
-						"type": "GetMetadata",
-						"dependsOn": [
-							{
-								"activity": "dataset_parent_year",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "ResponseRawParent",
-								"type": "DatasetReference",
-								"parameters": {
-									"dataset": {
-										"value": "@concat(variables('dataset_parent_year'),'/')",
-										"type": "Expression"
-									}
-								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "JsonReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEach dls 01_raw_copy1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Metadata1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get Metadata1').output.childItems",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Get Metadata 01_raw 2_copy1",
-									"type": "GetMetadata",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataset": {
-											"referenceName": "ResponseJsonPD",
-											"type": "DatasetReference",
-											"parameters": {
-												"file_name": {
-													"value": "@item().Name",
-													"type": "Expression"
-												},
-												"dataset": {
-													"value": "@variables('dataset_parent_year')",
-													"type": "Expression"
-												}
-											}
-										},
-										"fieldList": [
-											"lastModified",
-											"itemName"
-										],
-										"storeSettings": {
-											"type": "AzureBlobFSReadSettings",
-											"recursive": true,
-											"enablePartitionDiscovery": false
-										},
-										"formatSettings": {
-											"type": "JsonReadSettings"
-										}
-									}
-								},
-								{
-									"name": "If Condition last_modified_copy1",
-									"type": "IfCondition",
-									"dependsOn": [
-										{
-											"activity": "Get Metadata 01_raw 2_copy1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@greater(activity('Get Metadata 01_raw 2_copy1').output.lastModified, variables('month'))",
-											"type": "Expression"
-										},
-										"ifTrueActivities": [
-											{
-												"name": "month",
-												"type": "SetVariable",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "month",
-													"value": {
-														"value": "@activity('Get Metadata 01_raw 2_copy1').output.itemName",
-														"type": "Expression"
-													}
-												}
-											}
-										]
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "dataset_parent_year_month",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ForEach dls 01_raw_copy1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "dataset_parent_year_month",
-							"value": {
-								"value": "@concat(concat(variables('dataset_parent_year'),'/'),variables('month'))",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Get Metadata1_copy1",
-						"type": "GetMetadata",
-						"dependsOn": [
-							{
-								"activity": "dataset_parent_year_month",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "ResponseRawParent",
-								"type": "DatasetReference",
-								"parameters": {
-									"dataset": {
-										"value": "@concat(variables('dataset_parent_year_month'),'/')",
-										"type": "Expression"
-									}
-								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "JsonReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEach dls 01_raw_copy1_copy1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Metadata1_copy1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get Metadata1_copy1').output.childItems",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Get Metadata 01_raw 2_copy1_copy1",
-									"type": "GetMetadata",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataset": {
-											"referenceName": "ResponseJsonPD",
-											"type": "DatasetReference",
-											"parameters": {
-												"file_name": {
-													"value": "@item().Name",
-													"type": "Expression"
-												},
-												"dataset": {
-													"value": "@variables('dataset_parent_year_month')",
-													"type": "Expression"
-												}
-											}
-										},
-										"fieldList": [
-											"lastModified",
-											"itemName"
-										],
-										"storeSettings": {
-											"type": "AzureBlobFSReadSettings",
-											"recursive": true,
-											"enablePartitionDiscovery": false
-										},
-										"formatSettings": {
-											"type": "JsonReadSettings"
-										}
-									}
-								},
-								{
-									"name": "If Condition last_modified_copy1_copy1",
-									"type": "IfCondition",
-									"dependsOn": [
-										{
-											"activity": "Get Metadata 01_raw 2_copy1_copy1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@greater(activity('Get Metadata 01_raw 2_copy1_copy1').output.lastModified, variables('day'))",
-											"type": "Expression"
-										},
-										"ifTrueActivities": [
-											{
-												"name": "day",
-												"type": "SetVariable",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "day",
-													"value": {
-														"value": "@activity('Get Metadata 01_raw 2_copy1_copy1').output.itemName",
-														"type": "Expression"
-													}
-												}
-											}
-										]
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "dataset_parent_year_month_day",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ForEach dls 01_raw_copy1_copy1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "dataset_parent_year_month_day",
-							"value": {
-								"value": "@concat(concat(variables('dataset_parent_year_month'),'/'),variables('day'))",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Get Metadata1_copy1_copy1",
-						"type": "GetMetadata",
-						"dependsOn": [
-							{
-								"activity": "dataset_parent_year_month_day",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "ResponseRawParent",
-								"type": "DatasetReference",
-								"parameters": {
-									"dataset": {
-										"value": "@concat(variables('dataset_parent_year_month_day'),'/')",
-										"type": "Expression"
-									}
-								}
-							},
-							"fieldList": [
-								"childItems"
-							],
-							"storeSettings": {
-								"type": "AzureBlobFSReadSettings",
-								"recursive": true,
-								"enablePartitionDiscovery": false
-							},
-							"formatSettings": {
-								"type": "JsonReadSettings"
-							}
-						}
-					},
-					{
-						"name": "ForEach dls 01_raw_copy1_copy1_copy1",
-						"type": "ForEach",
-						"dependsOn": [
-							{
-								"activity": "Get Metadata1_copy1_copy1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"items": {
-								"value": "@activity('Get Metadata1_copy1_copy1').output.childItems",
-								"type": "Expression"
-							},
-							"activities": [
-								{
-									"name": "Get Metadata 01_raw 2_copy1_copy1_copy1",
-									"type": "GetMetadata",
-									"dependsOn": [],
-									"policy": {
-										"timeout": "0.12:00:00",
-										"retry": 0,
-										"retryIntervalInSeconds": 30,
-										"secureOutput": false,
-										"secureInput": false
-									},
-									"userProperties": [],
-									"typeProperties": {
-										"dataset": {
-											"referenceName": "ResponseJsonPD",
-											"type": "DatasetReference",
-											"parameters": {
-												"file_name": {
-													"value": "@item().Name",
-													"type": "Expression"
-												},
-												"dataset": {
-													"value": "@variables('dataset_parent_year_month_day')",
-													"type": "Expression"
-												}
-											}
-										},
-										"fieldList": [
-											"lastModified",
-											"itemName"
-										],
-										"storeSettings": {
-											"type": "AzureBlobFSReadSettings",
-											"recursive": true,
-											"enablePartitionDiscovery": false
-										},
-										"formatSettings": {
-											"type": "JsonReadSettings"
-										}
-									}
-								},
-								{
-									"name": "If Condition last_modified_copy1_copy1_copy1",
-									"type": "IfCondition",
-									"dependsOn": [
-										{
-											"activity": "Get Metadata 01_raw 2_copy1_copy1_copy1",
-											"dependencyConditions": [
-												"Succeeded"
-											]
-										}
-									],
-									"userProperties": [],
-									"typeProperties": {
-										"expression": {
-											"value": "@greater(activity('Get Metadata 01_raw 2_copy1_copy1_copy1').output.lastModified, variables('file_name'))",
-											"type": "Expression"
-										},
-										"ifTrueActivities": [
-											{
-												"name": "filename",
-												"type": "SetVariable",
-												"dependsOn": [],
-												"userProperties": [],
-												"typeProperties": {
-													"variableName": "file_name",
-													"value": {
-														"value": "@activity('Get Metadata 01_raw 2_copy1_copy1_copy1').output.itemName",
-														"type": "Expression"
-													}
-												}
-											}
-										]
-									}
-								}
-							]
-						}
-					},
-					{
-						"name": "filename_final",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ForEach dls 01_raw_copy1_copy1_copy1",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "filename",
-							"value": {
-								"value": "@variables('file_name')",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"dataset": {
-						"type": "string",
-						"defaultValue": "police_department"
-					}
-				},
-				"variables": {
-					"file_name": {
-						"type": "String"
-					},
-					"last_modified": {
-						"type": "String"
-					},
-					"year": {
-						"type": "String"
-					},
-					"month": {
-						"type": "String"
-					},
-					"day": {
-						"type": "String"
-					},
-					"dataset_parent_year": {
-						"type": "String"
-					},
-					"dataset_parent_year_month": {
-						"type": "String"
-					},
-					"dataset_parent_year_month_day": {
-						"type": "String"
-					},
-					"filename": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "OLD"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-05-31T11:11:59Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ReponseRaw')]",
-				"[concat(variables('factoryId'), '/datasets/ResponseRawParent')]",
-				"[concat(variables('factoryId'), '/datasets/ResponseJsonPD')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/01_extract_from_api')]",
+			"name": "[concat(parameters('factoryName'), '/01_extract_from_api_raw')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -869,7 +193,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "RestResourcePoliceDepartment",
+								"referenceName": "SFPD_restapi_raw",
 								"type": "DatasetReference",
 								"parameters": {
 									"exclude_system_fields": {
@@ -901,7 +225,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "ResponseJsonPoliceDepartment",
+								"referenceName": "SFPD_response_raw",
 								"type": "DatasetReference",
 								"parameters": {
 									"dataset": {
@@ -1100,14 +424,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "LogSourceTemplate",
+								"referenceName": "SFPD_log_template_raw",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "LogSourceTemplate",
+								"referenceName": "SFPD_log_template_raw",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -1217,7 +541,7 @@
 								}
 							},
 							"dataset": {
-								"referenceName": "LogSource",
+								"referenceName": "SFPD_log_raw",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -1346,125 +670,25 @@
 				"lastPublishTime": "2023-06-03T23:31:28Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/RestResourcePoliceDepartment')]",
-				"[concat(variables('factoryId'), '/datasets/ResponseJsonPoliceDepartment')]",
-				"[concat(variables('factoryId'), '/datasets/LogSourceTemplate')]",
+				"[concat(variables('factoryId'), '/datasets/SFPD_restapi_raw')]",
+				"[concat(variables('factoryId'), '/datasets/SFPD_response_raw')]",
+				"[concat(variables('factoryId'), '/datasets/SFPD_log_template_raw')]",
 				"[concat(variables('factoryId'), '/dataflows/01_append_trigger_time_bronze')]",
-				"[concat(variables('factoryId'), '/datasets/LogSource')]"
+				"[concat(variables('factoryId'), '/datasets/SFPD_log_raw')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/01_extract_from_api_OLD')]",
+			"name": "[concat(parameters('factoryName'), '/02_validate_extraction_silver')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "trigger_time",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "start_date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "trigger_time",
-							"value": {
-								"value": "@pipeline().TriggerTime",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "unix_trigger_time",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "trigger_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "unix_trigger_time",
-							"value": {
-								"value": "@string(sub(div(ticks(variables('trigger_time')),10000000),div(ticks(variables('param_epoch')),10000000)))",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "trigger_time_year",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "trigger_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "trigger_time_year",
-							"value": {
-								"value": "@formatDateTime(variables('trigger_time'), 'yyyy')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "trigger_time_month",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "trigger_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "trigger_time_month",
-							"value": {
-								"value": "@formatDateTime(variables('trigger_time'), 'MM')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "trigger_time_day",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "trigger_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "trigger_time_day",
-							"value": {
-								"value": "@formatDateTime(variables('trigger_time'), 'dd')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Fetch Data From Socrata Api to Blob Storage Gen2",
+						"name": "From raw to silver layer",
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "report_datetime_format_date",
+								"activity": "Watermark unified",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1480,85 +704,47 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "RestSource",
-								"httpRequestTimeout": "00:01:40",
-								"requestInterval": "00.00:00:00.010",
-								"requestMethod": "GET",
-								"paginationRules": {
-									"supportRFC5988": "true"
+								"type": "JsonSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*.json",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "JsonReadSettings"
 								}
 							},
 							"sink": {
-								"type": "JsonSink",
+								"type": "ParquetSink",
 								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
+									"type": "AzureBlobFSWriteSettings",
+									"copyBehavior": "MergeFiles"
 								},
 								"formatSettings": {
-									"type": "JsonWriteSettings"
+									"type": "ParquetWriteSettings"
 								}
 							},
 							"enableStaging": false
 						},
 						"inputs": [
 							{
-								"referenceName": "RestResourcePoliceDepartment",
+								"referenceName": "SFPD_raw",
 								"type": "DatasetReference",
-								"parameters": {
-									"exclude_system_fields": {
-										"value": "@pipeline().parameters.exclude_system_fields",
-										"type": "Expression"
-									},
-									"limit": {
-										"value": "@pipeline().parameters.limit",
-										"type": "Expression"
-									},
-									"where_1": {
-										"value": "@pipeline().parameters.where",
-										"type": "Expression"
-									},
-									"start_date": {
-										"value": "@pipeline().parameters.start_date",
-										"type": "Expression"
-									},
-									"end_date": {
-										"value": "@pipeline().parameters.end_date",
-										"type": "Expression"
-									},
-									"where_2": "a"
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "ResponseJsonPoliceDepartment",
+								"referenceName": "SFPD_parquet_silver",
 								"type": "DatasetReference",
 								"parameters": {
+									"file_name": {
+										"value": "@pipeline().parameters.file_name",
+										"type": "Expression"
+									},
 									"dataset": {
 										"value": "@pipeline().parameters.dataset",
-										"type": "Expression"
-									},
-									"trigger_time_year": {
-										"value": "@variables('trigger_time_year')",
-										"type": "Expression"
-									},
-									"trigger_time_month": {
-										"value": "@variables('trigger_time_month')",
-										"type": "Expression"
-									},
-									"response_format": {
-										"value": "@pipeline().parameters.response_format",
-										"type": "Expression"
-									},
-									"unix_trigger_time": {
-										"value": "@variables('unix_trigger_time')",
-										"type": "Expression"
-									},
-									"file_path": {
-										"value": "@variables('file_path')",
-										"type": "Expression"
-									},
-									"file_name": {
-										"value": "@variables('file_name')",
 										"type": "Expression"
 									}
 								}
@@ -1566,319 +752,11 @@
 						]
 					},
 					{
-						"name": "file_path",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "unix_trigger_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "trigger_time_year",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "trigger_time_month",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "trigger_time_day",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "file_path",
-							"value": {
-								"value": "@concat(concat(concat(concat(concat(concat(concat('01-raw/',pipeline().parameters.dataset,'/'), variables('trigger_time_year')),'/'),variables('trigger_time_month')),'/'),variables('trigger_time_day')),'/')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "file_name",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "file_path",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "file_name",
-							"value": {
-								"value": "@concat(concat(variables('unix_trigger_time'),'_'),pipeline().parameters.field_name,pipeline().parameters.response_format)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "report_datetime_format_date",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "file_name",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "report_datetime_format_date",
-							"value": {
-								"value": "@concat(concat(concat(concat(formatDateTime(replace(pipeline().parameters.start_date,'''',''),'yyyy'),'_'),formatDateTime(replace(pipeline().parameters.start_date,'''',''),'MM')),'_'),formatDateTime(replace(pipeline().parameters.start_date,'''',''),'dd'))\n\n",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "00_get_metadata_from_blob",
-						"type": "ExecutePipeline",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"pipeline": {
-								"referenceName": "00_get_metadata_from_blob_OLD",
-								"type": "PipelineReference"
-							},
-							"waitOnCompletion": true,
-							"parameters": {}
-						}
-					},
-					{
-						"name": "start_date",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "POST",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "start_date",
-							"value": {
-								"value": "@string(activity('POST').output.value[0].output)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "POST",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "00_get_metadata_from_blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": {
-								"value": "@concat('https://management.azure.com/subscriptions/452138b6-ecca-4e93-b8f9-5ee68cccbf98/resourceGroups/rg-dev/providers/Microsoft.DataFactory/factories/adf-dev-eastus-0001/pipelineruns/',string(activity('00_get_metadata_from_blob').output.pipelineRunId),'/queryActivityruns?api-version=2018-06-01')\n\n",
-								"type": "Expression"
-							},
-							"method": "POST",
-							"headers": {},
-							"body": "a",
-							"httpRequestTimeout": "00:01:00",
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://management.azure.com/"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"exclude_system_fields": {
-						"type": "string",
-						"defaultValue": "False"
-					},
-					"limit": {
-						"type": "string",
-						"defaultValue": "1"
-					},
-					"where": {
-						"type": "string",
-						"defaultValue": "report_datetime  "
-					},
-					"start_date": {
-						"type": "string"
-					},
-					"end_date": {
-						"type": "string",
-						"defaultValue": "'2018-01-02T00:00:00'"
-					},
-					"dataset": {
-						"type": "string",
-						"defaultValue": "police_department"
-					},
-					"field_name": {
-						"type": "string",
-						"defaultValue": "report_datetime_"
-					},
-					"response_format": {
-						"type": "string",
-						"defaultValue": ".json"
-					}
-				},
-				"variables": {
-					"param_epoch": {
-						"type": "String",
-						"defaultValue": "1970-01-01T00:00:00Z"
-					},
-					"trigger_time": {
-						"type": "String"
-					},
-					"unix_trigger_time": {
-						"type": "String"
-					},
-					"trigger_time_year": {
-						"type": "String"
-					},
-					"trigger_time_month": {
-						"type": "String"
-					},
-					"trigger_time_day": {
-						"type": "String"
-					},
-					"file_path": {
-						"type": "String"
-					},
-					"file_name": {
-						"type": "String"
-					},
-					"report_datetime_format_date": {
-						"type": "String"
-					},
-					"start_date": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "OLD"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-06-03T22:58:48Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/RestResourcePoliceDepartment')]",
-				"[concat(variables('factoryId'), '/datasets/ResponseJsonPoliceDepartment')]",
-				"[concat(variables('factoryId'), '/pipelines/00_get_metadata_from_blob_OLD')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/01_extract_from_api_OLD2')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "trigger_time",
-						"type": "SetVariable",
-						"dependsOn": [],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "trigger_time",
-							"value": {
-								"value": "@pipeline().TriggerTime",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "unix_trigger_time",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "trigger_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "unix_trigger_time",
-							"value": {
-								"value": "@string(sub(div(ticks(variables('trigger_time')),10000000),div(ticks(variables('param_epoch')),10000000)))",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "trigger_time_year",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "trigger_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "trigger_time_year",
-							"value": {
-								"value": "@formatDateTime(variables('trigger_time'), 'yyyy')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "trigger_time_month",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "trigger_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "trigger_time_month",
-							"value": {
-								"value": "@formatDateTime(variables('trigger_time'), 'MM')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Fetch Data From Socrata Api to Blob Storage Gen2",
+						"name": "Copy watermark to blob",
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "report_datetime_format_date",
+								"activity": "insert_datetime",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1894,175 +772,98 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "RestSource",
-								"httpRequestTimeout": "00:01:40",
-								"requestInterval": "00.00:00:00.010",
-								"requestMethod": "GET",
-								"paginationRules": {
-									"supportRFC5988": "true"
+								"type": "DelimitedTextSource",
+								"additionalColumns": [
+									{
+										"name": "processing_mode_",
+										"value": {
+											"value": "@string('FULL LOAD')",
+											"type": "Expression"
+										}
+									},
+									{
+										"name": "insert_datetime_",
+										"value": {
+											"value": "@addDays(variables('insert_datetime'),1)",
+											"type": "Expression"
+										}
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
 								}
 							},
 							"sink": {
-								"type": "JsonSink",
+								"type": "DelimitedTextSink",
 								"storeSettings": {
 									"type": "AzureBlobFSWriteSettings"
 								},
 								"formatSettings": {
-									"type": "JsonWriteSettings"
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
 								}
 							},
-							"enableStaging": false
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "processing_mode_",
+											"type": "String"
+										},
+										"sink": {
+											"name": "processing_mode",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "insert_datetime_",
+											"type": "String"
+										},
+										"sink": {
+											"name": "insert_datetime",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
 						},
 						"inputs": [
 							{
-								"referenceName": "RestResourcePoliceDepartment",
+								"referenceName": "SFPD_log_template_silver",
 								"type": "DatasetReference",
-								"parameters": {
-									"exclude_system_fields": {
-										"value": "@pipeline().parameters.exclude_system_fields",
-										"type": "Expression"
-									},
-									"limit": {
-										"value": "@pipeline().parameters.limit",
-										"type": "Expression"
-									},
-									"where_1": {
-										"value": "@pipeline().parameters.where",
-										"type": "Expression"
-									},
-									"start_date": {
-										"value": "@pipeline().parameters.start_date",
-										"type": "Expression"
-									},
-									"end_date": {
-										"value": "@pipeline().parameters.end_date",
-										"type": "Expression"
-									},
-									"where_2": "a"
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "ResponseJsonPoliceDepartment",
+								"referenceName": "SFPD_log_template_silver",
 								"type": "DatasetReference",
-								"parameters": {
-									"dataset": {
-										"value": "@pipeline().parameters.dataset",
-										"type": "Expression"
-									},
-									"trigger_time_year": {
-										"value": "@variables('trigger_time_year')",
-										"type": "Expression"
-									},
-									"trigger_time_month": {
-										"value": "@variables('trigger_time_month')",
-										"type": "Expression"
-									},
-									"response_format": {
-										"value": "@pipeline().parameters.response_format",
-										"type": "Expression"
-									},
-									"unix_trigger_time": {
-										"value": "@variables('unix_trigger_time')",
-										"type": "Expression"
-									},
-									"file_path": {
-										"value": "@variables('file_path')",
-										"type": "Expression"
-									},
-									"file_name": {
-										"value": "@variables('file_name')",
-										"type": "Expression"
-									}
-								}
+								"parameters": {}
 							}
 						]
 					},
 					{
-						"name": "file_path",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "unix_trigger_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "trigger_time_year",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "trigger_time_month",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "current_datetime",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "file_path",
-							"value": {
-								"value": "@concat(concat(concat(concat(concat('01-raw/',pipeline().parameters.dataset,'/'), variables('trigger_time_year')),'/'),variables('trigger_time_month')),'/')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "file_name",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "file_path",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "file_name",
-							"value": {
-								"value": "@concat(concat(variables('unix_trigger_time'),'_'),pipeline().parameters.field_name,pipeline().parameters.response_format)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "report_datetime_format_date",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "file_name",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "report_datetime_format_date",
-							"value": {
-								"value": "@concat(concat(concat(concat(formatDateTime(replace(pipeline().parameters.start_date,'''',''),'yyyy'),'_'),formatDateTime(replace(pipeline().parameters.start_date,'''',''),'MM')),'_'),formatDateTime(replace(pipeline().parameters.start_date,'''',''),'dd'))\n\n",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "current_datetime",
+						"name": "Watermark unified",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [
 							{
-								"activity": "trigger_time",
+								"activity": "Copy watermark to blob",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2078,12 +879,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "current_datetime_OLD",
+								"referenceName": "01_append_trigger_time_silver",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
+									"LogSourceTemplate": {},
 									"LogSource": {},
-									"loadLoad": {}
+									"LogLoad": {}
 								}
 							},
 							"staging": {},
@@ -2091,150 +893,10 @@
 								"coreCount": 8,
 								"computeType": "General"
 							},
-							"traceLevel": "Fine"
+							"traceLevel": "Fine",
+							"runConcurrently": true
 						}
 					},
-					{
-						"name": "ingestion_api_socrata",
-						"type": "WebActivity",
-						"dependsOn": [
-							{
-								"activity": "current_datetime",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"url": "https://dlsdeveastus0001.blob.core.windows.net/execution-logs/ingestion_api_socrata.log",
-							"method": "GET",
-							"headers": {
-								"x-ms-version": "2017-11-09",
-								"x-ms-blob-type": "BlockBlob"
-							},
-							"authentication": {
-								"type": "MSI",
-								"resource": "https://storage.azure.com"
-							}
-						}
-					},
-					{
-						"name": "response_execution_log",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ingestion_api_socrata",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "response_execution_log",
-							"value": {
-								"value": "@activity('ingestion_api_socrata').output.Response",
-								"type": "Expression"
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"exclude_system_fields": {
-						"type": "string",
-						"defaultValue": "False"
-					},
-					"limit": {
-						"type": "string",
-						"defaultValue": "1"
-					},
-					"where": {
-						"type": "string",
-						"defaultValue": "report_datetime  "
-					},
-					"start_date": {
-						"type": "string"
-					},
-					"end_date": {
-						"type": "string",
-						"defaultValue": "'2018-01-02T00:00:00'"
-					},
-					"dataset": {
-						"type": "string",
-						"defaultValue": "police_department"
-					},
-					"field_name": {
-						"type": "string",
-						"defaultValue": "report_datetime_"
-					},
-					"response_format": {
-						"type": "string",
-						"defaultValue": ".json"
-					}
-				},
-				"variables": {
-					"param_epoch": {
-						"type": "String",
-						"defaultValue": "1970-01-01T00:00:00Z"
-					},
-					"trigger_time": {
-						"type": "String"
-					},
-					"unix_trigger_time": {
-						"type": "String"
-					},
-					"trigger_time_year": {
-						"type": "String"
-					},
-					"trigger_time_month": {
-						"type": "String"
-					},
-					"file_path": {
-						"type": "String"
-					},
-					"file_name": {
-						"type": "String"
-					},
-					"report_datetime_format_date": {
-						"type": "String"
-					},
-					"start_date": {
-						"type": "String"
-					},
-					"response_execution_log": {
-						"type": "String"
-					}
-				},
-				"folder": {
-					"name": "OLD"
-				},
-				"annotations": [],
-				"lastPublishTime": "2023-06-03T22:58:49Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/RestResourcePoliceDepartment')]",
-				"[concat(variables('factoryId'), '/datasets/ResponseJsonPoliceDepartment')]",
-				"[concat(variables('factoryId'), '/dataflows/current_datetime_OLD')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/02_validate_extraction')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
 					{
 						"name": "ReadLogSource",
 						"type": "Lookup",
@@ -2260,7 +922,7 @@
 								}
 							},
 							"dataset": {
-								"referenceName": "LogSource",
+								"referenceName": "SFPD_log_silver",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -2282,27 +944,7 @@
 						"typeProperties": {
 							"variableName": "insert_datetime",
 							"value": {
-								"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,28)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "datetime_year",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "insert_datetime",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "datetime_year",
-							"value": {
-								"value": "@formatDateTime(variables('insert_datetime'),'yyyy')",
+								"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,20)",
 								"type": "Expression"
 							}
 						}
@@ -2312,22 +954,33 @@
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"parameters": {
+					"file_name": {
+						"type": "string",
+						"defaultValue": "san_francisco_police_department.parquet"
+					},
+					"dataset": {
+						"type": "string",
+						"defaultValue": "police_department"
+					}
+				},
 				"variables": {
 					"insert_datetime": {
-						"type": "String"
-					},
-					"datetime_year": {
 						"type": "String"
 					}
 				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/LogSource')]"
+				"[concat(variables('factoryId'), '/datasets/SFPD_raw')]",
+				"[concat(variables('factoryId'), '/datasets/SFPD_parquet_silver')]",
+				"[concat(variables('factoryId'), '/datasets/SFPD_log_template_silver')]",
+				"[concat(variables('factoryId'), '/dataflows/01_append_trigger_time_silver')]",
+				"[concat(variables('factoryId'), '/datasets/SFPD_log_silver')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/LogSource')]",
+			"name": "[concat(parameters('factoryName'), '/SFPD_log_raw')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2365,7 +1018,45 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/LogSourceTemplate')]",
+			"name": "[concat(parameters('factoryName'), '/SFPD_log_silver')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "dls_socrata_api",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "ingestion_api_socrata.log",
+						"folderPath": "02-silver",
+						"fileSystem": "execution-logs"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "processing_mode",
+						"type": "String"
+					},
+					{
+						"name": "insert_datetime",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/dls_socrata_api')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SFPD_log_template_raw')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2403,7 +1094,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ReponseRaw')]",
+			"name": "[concat(parameters('factoryName'), '/SFPD_log_template_silver')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2411,34 +1102,37 @@
 					"referenceName": "dls_socrata_api",
 					"type": "LinkedServiceReference"
 				},
-				"parameters": {
-					"dataset": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "OLD"
-				},
 				"annotations": [],
-				"type": "Json",
+				"type": "DelimitedText",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": {
-							"value": "@dataset().dataset",
-							"type": "Expression"
-						},
-						"fileSystem": "01-raw"
-					}
+						"fileName": "ingestion_api_socrata_template.log",
+						"folderPath": "02-silver",
+						"fileSystem": "execution-logs"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
 				},
-				"schema": {}
+				"schema": [
+					{
+						"name": "processing_mode",
+						"type": "String"
+					},
+					{
+						"name": "insert_datetime",
+						"type": "String"
+					}
+				]
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/dls_socrata_api')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ResponseJsonPD')]",
+			"name": "[concat(parameters('factoryName'), '/SFPD_parquet_silver')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2448,18 +1142,14 @@
 				},
 				"parameters": {
 					"file_name": {
-						"type": "string",
-						"defaultValue": "*.json"
+						"type": "string"
 					},
 					"dataset": {
 						"type": "string"
 					}
 				},
-				"folder": {
-					"name": "OLD"
-				},
 				"annotations": [],
-				"type": "Json",
+				"type": "Parquet",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
@@ -2471,6 +1161,30 @@
 							"value": "@dataset().dataset",
 							"type": "Expression"
 						},
+						"fileSystem": "02-silver"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/dls_socrata_api')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SFPD_raw')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "dls_socrata_api",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
 						"fileSystem": "01-raw"
 					}
 				},
@@ -2504,14 +1218,14 @@
 						"incident_number": {
 							"type": "string"
 						},
-						"cad_number": {
-							"type": "string"
-						},
 						"report_type_code": {
 							"type": "string"
 						},
 						"report_type_description": {
 							"type": "string"
+						},
+						"filed_online": {
+							"type": "boolean"
 						},
 						"incident_code": {
 							"type": "string"
@@ -2528,13 +1242,25 @@
 						"resolution": {
 							"type": "string"
 						},
+						"police_district": {
+							"type": "string"
+						},
+						":id": {
+							"type": "string"
+						},
+						":created_at": {
+							"type": "string"
+						},
+						":updated_at": {
+							"type": "string"
+						},
+						"cad_number": {
+							"type": "string"
+						},
 						"intersection": {
 							"type": "string"
 						},
 						"cnn": {
-							"type": "string"
-						},
-						"police_district": {
 							"type": "string"
 						},
 						"analysis_neighborhood": {
@@ -2565,18 +1291,6 @@
 									}
 								}
 							}
-						},
-						":id": {
-							"type": "string"
-						},
-						":created_at": {
-							"type": "string"
-						},
-						":updated_at": {
-							"type": "string"
-						},
-						"filed_online": {
-							"type": "boolean"
 						}
 					}
 				}
@@ -2586,7 +1300,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ResponseJsonPoliceDepartment')]",
+			"name": "[concat(parameters('factoryName'), '/SFPD_response_raw')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2639,144 +1353,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ResponseRawParent')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "dls_socrata_api",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"dataset": {
-						"type": "string"
-					}
-				},
-				"folder": {
-					"name": "OLD"
-				},
-				"annotations": [],
-				"type": "Json",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": {
-							"value": "@dataset().dataset",
-							"type": "Expression"
-						},
-						"fileSystem": "01-raw"
-					}
-				},
-				"schema": {
-					"type": "object",
-					"properties": {
-						"incident_datetime": {
-							"type": "string"
-						},
-						"incident_date": {
-							"type": "string"
-						},
-						"incident_time": {
-							"type": "string"
-						},
-						"incident_year": {
-							"type": "string"
-						},
-						"incident_day_of_week": {
-							"type": "string"
-						},
-						"report_datetime": {
-							"type": "string"
-						},
-						"row_id": {
-							"type": "string"
-						},
-						"incident_id": {
-							"type": "string"
-						},
-						"incident_number": {
-							"type": "string"
-						},
-						"cad_number": {
-							"type": "string"
-						},
-						"report_type_code": {
-							"type": "string"
-						},
-						"report_type_description": {
-							"type": "string"
-						},
-						"incident_code": {
-							"type": "string"
-						},
-						"incident_category": {
-							"type": "string"
-						},
-						"incident_subcategory": {
-							"type": "string"
-						},
-						"incident_description": {
-							"type": "string"
-						},
-						"resolution": {
-							"type": "string"
-						},
-						"intersection": {
-							"type": "string"
-						},
-						"cnn": {
-							"type": "string"
-						},
-						"police_district": {
-							"type": "string"
-						},
-						"analysis_neighborhood": {
-							"type": "string"
-						},
-						"supervisor_district": {
-							"type": "string"
-						},
-						"supervisor_district_2012": {
-							"type": "string"
-						},
-						"latitude": {
-							"type": "string"
-						},
-						"longitude": {
-							"type": "string"
-						},
-						"point": {
-							"type": "object",
-							"properties": {
-								"type": {
-									"type": "string"
-								},
-								"coordinates": {
-									"type": "array",
-									"items": {
-										"type": "number"
-									}
-								}
-							}
-						},
-						":id": {
-							"type": "string"
-						},
-						":created_at": {
-							"type": "string"
-						},
-						":updated_at": {
-							"type": "string"
-						}
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/dls_socrata_api')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/RestResourcePoliceDepartment')]",
+			"name": "[concat(parameters('factoryName'), '/SFPD_restapi_raw')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2898,6 +1475,39 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/everyday_210PM_Brasilia')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "02_validate_extraction_silver",
+							"type": "PipelineReference"
+						},
+						"parameters": {
+							"file_name": "[parameters('everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_file_name')]",
+							"dataset": "[parameters('everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_dataset')]"
+						}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2023-06-09T14:10:00",
+						"timeZone": "E. South America Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/02_validate_extraction_silver')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/everyday_2PM_Brasilia')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
@@ -2907,18 +1517,18 @@
 				"pipelines": [
 					{
 						"pipelineReference": {
-							"referenceName": "01_extract_from_api",
+							"referenceName": "01_extract_from_api_raw",
 							"type": "PipelineReference"
 						},
 						"parameters": {
-							"exclude_system_fields": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_exclude_system_fields')]",
-							"limit": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_limit')]",
-							"where_1": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_1')]",
-							"dataset": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_dataset')]",
-							"field_name_1": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_1')]",
-							"response_format": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_response_format')]",
-							"field_name_2": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_field_name_2')]",
-							"where_2": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_parameters_where_2')]"
+							"exclude_system_fields": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_exclude_system_fields')]",
+							"limit": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_limit')]",
+							"where_1": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_where_1')]",
+							"dataset": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_dataset')]",
+							"field_name_1": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_field_name_1')]",
+							"response_format": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_response_format')]",
+							"field_name_2": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_field_name_2')]",
+							"where_2": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_where_2')]"
 						}
 					}
 				],
@@ -2928,13 +1538,12 @@
 						"frequency": "Day",
 						"interval": 1,
 						"startTime": "2023-06-05T14:00:00",
-						"timeZone": "E. South America Standard Time",
-						"schedule": {}
+						"timeZone": "E. South America Standard Time"
 					}
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/01_extract_from_api')]"
+				"[concat(variables('factoryId'), '/pipelines/01_extract_from_api_raw')]"
 			]
 		},
 		{
@@ -2947,14 +1556,14 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "LogSourceTemplate",
+								"referenceName": "SFPD_log_template_raw",
 								"type": "DatasetReference"
 							},
 							"name": "LogSourceTemplate"
 						},
 						{
 							"dataset": {
-								"referenceName": "LogSource",
+								"referenceName": "SFPD_log_raw",
 								"type": "DatasetReference"
 							},
 							"name": "LogSource"
@@ -2963,7 +1572,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "LogSource",
+								"referenceName": "SFPD_log_raw",
 								"type": "DatasetReference"
 							},
 							"name": "LogLoad"
@@ -3007,8 +1616,8 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/LogSourceTemplate')]",
-				"[concat(variables('factoryId'), '/datasets/LogSource')]"
+				"[concat(variables('factoryId'), '/datasets/SFPD_log_template_raw')]",
+				"[concat(variables('factoryId'), '/datasets/SFPD_log_raw')]"
 			]
 		},
 		{
@@ -3021,14 +1630,14 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "LogSourceTemplate",
+								"referenceName": "SFPD_log_template_silver",
 								"type": "DatasetReference"
 							},
 							"name": "LogSourceTemplate"
 						},
 						{
 							"dataset": {
-								"referenceName": "LogSource",
+								"referenceName": "SFPD_log_silver",
 								"type": "DatasetReference"
 							},
 							"name": "LogSource"
@@ -3037,7 +1646,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "LogSource",
+								"referenceName": "SFPD_log_silver",
 								"type": "DatasetReference"
 							},
 							"name": "LogLoad"
@@ -3081,8 +1690,8 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/LogSourceTemplate')]",
-				"[concat(variables('factoryId'), '/datasets/LogSource')]"
+				"[concat(variables('factoryId'), '/datasets/SFPD_log_template_silver')]",
+				"[concat(variables('factoryId'), '/datasets/SFPD_log_silver')]"
 			]
 		},
 		{
@@ -3098,7 +1707,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "LogSource",
+								"referenceName": "SFPD_log_raw",
 								"type": "DatasetReference"
 							},
 							"name": "LogSource"
@@ -3107,7 +1716,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "LogSource",
+								"referenceName": "SFPD_log_raw",
 								"type": "DatasetReference"
 							},
 							"name": "loadLoad"
@@ -3149,7 +1758,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/LogSource')]"
+				"[concat(variables('factoryId'), '/datasets/SFPD_log_raw')]"
 			]
 		},
 		{
@@ -3165,7 +1774,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "LogSource",
+								"referenceName": "SFPD_log_raw",
 								"type": "DatasetReference"
 							},
 							"name": "source1"
@@ -3218,7 +1827,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/LogSource')]"
+				"[concat(variables('factoryId'), '/datasets/SFPD_log_raw')]"
 			]
 		}
 	]
