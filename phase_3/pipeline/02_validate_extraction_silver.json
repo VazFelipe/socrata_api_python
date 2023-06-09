@@ -156,13 +156,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SFPD_log_template_raw",
+						"referenceName": "SFPD_log_template_silver",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "SFPD_log_template_raw",
+						"referenceName": "SFPD_log_template_silver",
 						"type": "DatasetReference"
 					}
 				]
@@ -224,7 +224,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "SFPD_log_raw",
+						"referenceName": "SFPD_log_silver",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
@@ -259,6 +259,11 @@
 			"dataset": {
 				"type": "string",
 				"defaultValue": "police_department"
+			}
+		},
+		"variables": {
+			"insert_datetime": {
+				"type": "String"
 			}
 		},
 		"annotations": []
