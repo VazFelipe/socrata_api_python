@@ -1,31 +1,35 @@
 {
-	"name": "ReponseRaw",
+	"name": "SFPD_parquet_silver",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "dls_socrata_api",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
+			"file_name": {
+				"type": "string"
+			},
 			"dataset": {
 				"type": "string"
 			}
 		},
-		"folder": {
-			"name": "OLD"
-		},
 		"annotations": [],
-		"type": "Json",
+		"type": "Parquet",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().file_name",
+					"type": "Expression"
+				},
 				"folderPath": {
 					"value": "@dataset().dataset",
 					"type": "Expression"
 				},
-				"fileSystem": "01-raw"
-			}
+				"fileSystem": "02-silver"
+			},
+			"compressionCodec": "snappy"
 		},
-		"schema": {}
-	},
-	"type": "Microsoft.DataFactory/factories/datasets"
+		"schema": []
+	}
 }

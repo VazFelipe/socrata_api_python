@@ -1,5 +1,5 @@
 {
-	"name": "ResponseJsonPoliceDepartment",
+	"name": "SFPD_response_raw",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "dls_socrata_api",
@@ -13,9 +13,6 @@
 				"type": "string"
 			},
 			"trigger_time_month": {
-				"type": "string"
-			},
-			"field_name": {
 				"type": "string"
 			},
 			"response_format": {
@@ -37,7 +34,7 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@dataset().field_name",
+					"value": "@dataset().file_name",
 					"type": "Expression"
 				},
 				"fileSystem": {

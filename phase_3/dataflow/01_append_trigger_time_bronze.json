@@ -6,14 +6,14 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "LogSourceTemplate",
+						"referenceName": "SFPD_log_template_raw",
 						"type": "DatasetReference"
 					},
 					"name": "LogSourceTemplate"
 				},
 				{
 					"dataset": {
-						"referenceName": "LogSource",
+						"referenceName": "SFPD_log_raw",
 						"type": "DatasetReference"
 					},
 					"name": "LogSource"
@@ -22,7 +22,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "LogSource",
+						"referenceName": "SFPD_log_raw",
 						"type": "DatasetReference"
 					},
 					"name": "LogLoad"

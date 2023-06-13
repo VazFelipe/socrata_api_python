@@ -1,21 +1,23 @@
 {
-	"name": "everyday_11AM_Brasilia",
+	"name": "everyday_2PM_Brasilia",
 	"properties": {
 		"annotations": [],
 		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
-					"referenceName": "01_extract_from_api",
+					"referenceName": "01_extract_from_api_raw",
 					"type": "PipelineReference"
 				},
 				"parameters": {
 					"exclude_system_fields": "False",
 					"limit": "9999999999",
-					"where_1": "report_datetime ",
+					"where_1": ":created_at ",
 					"dataset": "police_department",
-					"field_name_1": "report_datetime",
-					"response_format": ".json"
+					"field_name_1": "created_at",
+					"response_format": ".json",
+					"field_name_2": "updated_at",
+					"where_2": ":updated_at "
 				}
 			}
 		],
@@ -24,7 +26,7 @@
 			"recurrence": {
 				"frequency": "Day",
 				"interval": 1,
-				"startTime": "2023-06-05T11:00:00",
+				"startTime": "2023-06-05T14:00:00",
 				"timeZone": "E. South America Standard Time"
 			}
 		}

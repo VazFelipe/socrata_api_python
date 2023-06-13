@@ -1,5 +1,5 @@
 {
-	"name": "01_extract_from_api",
+	"name": "01_extract_from_api_raw",
 	"properties": {
 		"activities": [
 			{
@@ -80,7 +80,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "file_name",
+						"activity": "url_api",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -117,7 +117,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "RestResourcePoliceDepartment",
+						"referenceName": "SFPD_restapi_raw",
 						"type": "DatasetReference",
 						"parameters": {
 							"exclude_system_fields": {
@@ -149,7 +149,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ResponseJsonPoliceDepartment",
+						"referenceName": "SFPD_response_raw",
 						"type": "DatasetReference",
 						"parameters": {
 							"dataset": {
@@ -162,10 +162,6 @@
 							},
 							"trigger_time_month": {
 								"value": "@variables('trigger_time_month')",
-								"type": "Expression"
-							},
-							"field_name": {
-								"value": "@variables('file_name')",
 								"type": "Expression"
 							},
 							"response_format": {
@@ -352,13 +348,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "LogSourceTemplate",
+						"referenceName": "SFPD_log_template_raw",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "LogSourceTemplate",
+						"referenceName": "SFPD_log_template_raw",
 						"type": "DatasetReference"
 					}
 				]
@@ -460,7 +456,7 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "LogSource",
+						"referenceName": "SFPD_log_raw",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
@@ -481,7 +477,27 @@
 				"typeProperties": {
 					"variableName": "insert_datetime",
 					"value": {
-						"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,28)",
+						"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,20)",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "url_api",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "file_name",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "url_api",
+					"value": {
+						"value": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',pipeline().parameters.exclude_system_fields),'&$limit='),pipeline().parameters.limit),'&$where='),'('),pipeline().parameters.where_1),'BETWEEN '),variables('start_date')),' AND '), variables('end_date')),') OR ('),pipeline().parameters.where_2),'BETWEEN '),variables('start_date')),' AND '), variables('end_date')),')')}",
 						"type": "Expression"
 					}
 				}
@@ -554,6 +570,9 @@
 				"type": "String"
 			},
 			"insert_datetime": {
+				"type": "String"
+			},
+			"url_api": {
 				"type": "String"
 			}
 		},
