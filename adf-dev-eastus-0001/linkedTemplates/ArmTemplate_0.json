@@ -1504,7 +1504,274 @@
 									"type": "ParquetWriteSettings"
 								}
 							},
-							"enableStaging": false
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "$['incident_datetime']"
+										},
+										"sink": {
+											"name": "incident_datetime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['incident_date']"
+										},
+										"sink": {
+											"name": "incident_date",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['incident_time']"
+										},
+										"sink": {
+											"name": "incident_time",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['incident_year']"
+										},
+										"sink": {
+											"name": "incident_year",
+											"type": "Int16"
+										}
+									},
+									{
+										"source": {
+											"path": "$['incident_day_of_week']"
+										},
+										"sink": {
+											"name": "incident_day_of_week",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['report_datetime']"
+										},
+										"sink": {
+											"name": "report_datetime",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['row_id']"
+										},
+										"sink": {
+											"name": "row_id",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"path": "$['incident_id']"
+										},
+										"sink": {
+											"name": "incident_id",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"path": "$['incident_number']"
+										},
+										"sink": {
+											"name": "incident_number",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"path": "$['report_type_code']"
+										},
+										"sink": {
+											"name": "report_type_code",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['report_type_description']"
+										},
+										"sink": {
+											"name": "report_type_description",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['filed_online']"
+										},
+										"sink": {
+											"name": "filed_online",
+											"type": "Boolean"
+										}
+									},
+									{
+										"source": {
+											"path": "$['incident_code']"
+										},
+										"sink": {
+											"name": "incident_code",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"path": "$['incident_category']"
+										},
+										"sink": {
+											"name": "incident_category",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['incident_subcategory']"
+										},
+										"sink": {
+											"name": "incident_subcategory",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['incident_description']"
+										},
+										"sink": {
+											"name": "incident_description",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['resolution']"
+										},
+										"sink": {
+											"name": "resolution",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['police_district']"
+										},
+										"sink": {
+											"name": "police_district",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$[':id']"
+										},
+										"sink": {
+											"name": ":id",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$[':created_at']"
+										},
+										"sink": {
+											"name": ":created_at",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"path": "$[':updated_at']"
+										},
+										"sink": {
+											"name": ":updated_at",
+											"type": "DateTime"
+										}
+									},
+									{
+										"source": {
+											"path": "$['cad_number']"
+										},
+										"sink": {
+											"name": "cad_number",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"path": "$['intersection']"
+										},
+										"sink": {
+											"name": "intersection",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['cnn']"
+										},
+										"sink": {
+											"name": "cnn",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"path": "$['analysis_neighborhood']"
+										},
+										"sink": {
+											"name": "analysis_neighborhood",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "$['supervisor_district']"
+										},
+										"sink": {
+											"name": "supervisor_district",
+											"type": "Int16"
+										}
+									},
+									{
+										"source": {
+											"path": "$['supervisor_district_2012']"
+										},
+										"sink": {
+											"name": "supervisor_district_2012",
+											"type": "Int16"
+										}
+									},
+									{
+										"source": {
+											"path": "$['latitude']"
+										},
+										"sink": {
+											"name": "latitude",
+											"type": "Decimal"
+										}
+									},
+									{
+										"source": {
+											"path": "$['longitude']"
+										},
+										"sink": {
+											"name": "longitude",
+											"type": "Decimal"
+										}
+									}
+								],
+								"collectionReference": "$['point']['coordinates']"
+							}
 						},
 						"inputs": [
 							{
