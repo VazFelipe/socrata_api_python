@@ -2,7 +2,7 @@ import requests
 import pandas as pd
 
 # Define the datetime range for Socrata API request
-report_datetime = "'" + '2023-03-01T00:00:00' + "' AND '2023-03-31T23:59:59'" 
+report_datetime = "'" + '2022-03-01T00:00:00' + "' AND '2023-03-31T23:59:59'" 
 
 # Define the API params
 params = {
@@ -56,8 +56,3 @@ for col in df.select_dtypes(include='object'):
 print('\n\n# How does the continuous variables behave?')
 data_describe = df.describe()
 print(data_describe)
-
-# How many duplicates?
-print('\n\n# How many duplicates?')
-data_duplicates = sum(df.duplicated())
-print(data_duplicates)
