@@ -116,7 +116,7 @@ main.py
 
 ### 01-raw
 
-This parametrized template developed here ingest raw data from the City and County of San Francisco using Socrata Open Data API. The San Francisco Police Department's (SFPD) Incident Report Dataset is one of the most used reports for crime analysis. See the literature [here](https://www.sanfranciscopolice.org/sites/default/files/2022-11/SFPDQADRReport-2ndQuarter-20221129.pdf) and [here](https://scholar.google.com.br/scholar?hl=pt-BR&as_sdt=0%2C5&q=The+San+Francisco+Police+Department%E2%80%99s+%28SFPD%29+Incident+Report+Dataset&btnG=).
+This parameterized template developed here ingest raw data from the City and County of San Francisco using Socrata Open Data API. The San Francisco Police Department's (SFPD) Incident Report Dataset is one of the most used reports for crime analysis. See the literature [here](https://www.sanfranciscopolice.org/sites/default/files/2022-11/SFPDQADRReport-2ndQuarter-20221129.pdf) and [here](https://scholar.google.com.br/scholar?hl=pt-BR&as_sdt=0%2C5&q=The+San+Francisco+Police+Department%E2%80%99s+%28SFPD%29+Incident+Report+Dataset&btnG=).
 
 The holistic workflow presented below executes everyday at 11AM UTC, flag the trigger time as a watermark and store it in the /execution_logs/01-raw/ingestion_api_socrata.log. Then, the next execution starts from the last execution time in the log. This techinique is well documented [here](https://dwbi1.wordpress.com/2022/05/22/watermark-in-data-warehousing/) and [here](https://learn.microsoft.com/en-us/azure/data-factory/tutorial-incremental-copy-overview). 
 
@@ -128,4 +128,29 @@ The response from Socrata API is a JSON format and is stored in a hierarchical s
 
 Hierarchical Structure in the blob Storage Gen2
 
-![](/phase_3/images/hierarchical_structure.png)
+![](/phase_3/images/bronze_hierarchical_structure.png)
+
+### 02-silver
+
+This parameterized template fetch the data after 10 minutes of the bronze layer pipeline execution, applies the watermark technique storage and writes it in a new column. Then the data is converted to parquet and snappy compressed. The holistic workflow is presented below:
+
+Silver Layer
+
+![](/phase_3/images/silver_layer.png)
+
+Hierarchical Structure in the blob Storage Gen2
+
+![](/phase_3/images/silver_hierarchical_structure.png)
+
+In the silver layer the data has to be validated, enriched and ready for downstream analytics. Data profiling technique was applied using python and pandas library to understand the data types and data patterns for the data quality improvements. The scenario described below shows the evaluation steps that leads to the mapping phase in the pipeline and for the transformations needed to make data available in the right way:
+
+Data profiling ::: DEV :::
+
+The parameters for data analysis ranges from 1 March 2022 until 31 March 2023. The data shape has 149.272 records per 31 columns (20% coverage of total size 735.432).
+
+Missing values
+
+The transformations
+
+![](/phase_3/images/silver_data_profiling_missing.png)
+

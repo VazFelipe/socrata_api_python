@@ -78,13 +78,13 @@ class Data:
 
             logger.info('From {cls} the attr: {attr}'.format(cls=type(blob).__name__, attr=blob), exc_info=True)
             
-            with blob.open("w") as write_file:
-                json.dump(request.json(), write_file, indent=4)
+            #with blob.open("w") as write_file:
+            #    json.dump(request.json(), write_file, indent=4)
             message = f'{max_date} loaded in the {Bucket().bucket_name} bucket'
 
             logger.info('From {cls} the attr: {attr}'.format(cls=type(message).__name__, attr=message), exc_info=True)
     
-        return message
+        return request.json()
             
 
 if __name__ == '__main__':
