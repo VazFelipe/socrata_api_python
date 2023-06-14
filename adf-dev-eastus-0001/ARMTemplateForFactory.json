@@ -1021,14 +1021,7 @@
 					{
 						"name": "Copy watermark to blob",
 						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "insert_datetime",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
+						"dependsOn": [],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -1051,7 +1044,7 @@
 									{
 										"name": "insert_datetime_",
 										"value": {
-											"value": "@addDays(variables('insert_datetime'),1)",
+											"value": "@pipeline().TriggerTime",
 											"type": "Expression"
 										}
 									}
@@ -1146,7 +1139,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "01_append_trigger_time_silver",
+								"referenceName": "02_append_trigger_time_silver",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -1162,58 +1155,6 @@
 							},
 							"traceLevel": "Fine",
 							"runConcurrently": true
-						}
-					},
-					{
-						"name": "ReadLogSource",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"dataset": {
-								"referenceName": "SFPD_log_silver",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "insert_datetime",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ReadLogSource",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "insert_datetime",
-							"value": {
-								"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,20)",
-								"type": "Expression"
-							}
 						}
 					}
 				],
@@ -1242,8 +1183,7 @@
 				"[concat(variables('factoryId'), '/datasets/SFPD_raw')]",
 				"[concat(variables('factoryId'), '/datasets/SFPD_parquet_silver')]",
 				"[concat(variables('factoryId'), '/datasets/SFPD_log_template_silver')]",
-				"[concat(variables('factoryId'), '/dataflows/01_append_trigger_time_silver')]",
-				"[concat(variables('factoryId'), '/datasets/SFPD_log_silver')]"
+				"[concat(variables('factoryId'), '/dataflows/02_append_trigger_time_silver')]"
 			]
 		},
 		{
@@ -1888,7 +1828,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/01_append_trigger_time_silver')]",
+			"name": "[concat(parameters('factoryName'), '/02_append_trigger_time_silver')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
