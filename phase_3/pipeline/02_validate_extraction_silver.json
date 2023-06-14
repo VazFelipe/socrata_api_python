@@ -339,14 +339,7 @@
 			{
 				"name": "Copy watermark to blob",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "insert_datetime",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -369,7 +362,7 @@
 							{
 								"name": "insert_datetime_",
 								"value": {
-									"value": "@addDays(variables('insert_datetime'),1)",
+									"value": "@pipeline().TriggerTime",
 									"type": "Expression"
 								}
 							}
@@ -462,7 +455,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "01_append_trigger_time_silver",
+						"referenceName": "02_append_trigger_time_silver",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -471,57 +464,6 @@
 					},
 					"traceLevel": "Fine",
 					"runConcurrently": true
-				}
-			},
-			{
-				"name": "ReadLogSource",
-				"type": "Lookup",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"source": {
-						"type": "DelimitedTextSource",
-						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
-						},
-						"formatSettings": {
-							"type": "DelimitedTextReadSettings"
-						}
-					},
-					"dataset": {
-						"referenceName": "SFPD_log_silver",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
-				}
-			},
-			{
-				"name": "insert_datetime",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "ReadLogSource",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "insert_datetime",
-					"value": {
-						"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,20)",
-						"type": "Expression"
-					}
 				}
 			}
 		],
