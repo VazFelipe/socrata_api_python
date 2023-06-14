@@ -72,7 +72,7 @@
 								},
 								"sink": {
 									"name": "incident_time",
-									"type": "TimeSpan"
+									"type": "String"
 								}
 							},
 							{
@@ -80,7 +80,8 @@
 									"path": "$['incident_year']"
 								},
 								"sink": {
-									"name": "incident_year"
+									"name": "incident_year",
+									"type": "Int16"
 								}
 							},
 							{
@@ -88,7 +89,8 @@
 									"path": "$['incident_day_of_week']"
 								},
 								"sink": {
-									"name": "incident_day_of_week"
+									"name": "incident_day_of_week",
+									"type": "String"
 								}
 							},
 							{
@@ -96,7 +98,8 @@
 									"path": "$['report_datetime']"
 								},
 								"sink": {
-									"name": "report_datetime"
+									"name": "report_datetime",
+									"type": "DateTime"
 								}
 							},
 							{
@@ -104,7 +107,8 @@
 									"path": "$['row_id']"
 								},
 								"sink": {
-									"name": "row_id"
+									"name": "row_id",
+									"type": "Int64"
 								}
 							},
 							{
@@ -112,7 +116,8 @@
 									"path": "$['incident_id']"
 								},
 								"sink": {
-									"name": "incident_id"
+									"name": "incident_id",
+									"type": "Int32"
 								}
 							},
 							{
@@ -120,7 +125,8 @@
 									"path": "$['incident_number']"
 								},
 								"sink": {
-									"name": "incident_number"
+									"name": "incident_number",
+									"type": "Int32"
 								}
 							},
 							{
@@ -128,7 +134,8 @@
 									"path": "$['report_type_code']"
 								},
 								"sink": {
-									"name": "report_type_code"
+									"name": "report_type_code",
+									"type": "String"
 								}
 							},
 							{
@@ -136,7 +143,8 @@
 									"path": "$['report_type_description']"
 								},
 								"sink": {
-									"name": "report_type_description"
+									"name": "report_type_description",
+									"type": "String"
 								}
 							},
 							{
@@ -144,7 +152,8 @@
 									"path": "$['filed_online']"
 								},
 								"sink": {
-									"name": "filed_online"
+									"name": "filed_online",
+									"type": "Boolean"
 								}
 							},
 							{
@@ -152,7 +161,8 @@
 									"path": "$['incident_code']"
 								},
 								"sink": {
-									"name": "incident_code"
+									"name": "incident_code",
+									"type": "Int32"
 								}
 							},
 							{
@@ -160,7 +170,8 @@
 									"path": "$['incident_category']"
 								},
 								"sink": {
-									"name": "incident_category"
+									"name": "incident_category",
+									"type": "String"
 								}
 							},
 							{
@@ -168,7 +179,8 @@
 									"path": "$['incident_subcategory']"
 								},
 								"sink": {
-									"name": "incident_subcategory"
+									"name": "incident_subcategory",
+									"type": "String"
 								}
 							},
 							{
@@ -176,7 +188,8 @@
 									"path": "$['incident_description']"
 								},
 								"sink": {
-									"name": "incident_description"
+									"name": "incident_description",
+									"type": "String"
 								}
 							},
 							{
@@ -184,7 +197,8 @@
 									"path": "$['resolution']"
 								},
 								"sink": {
-									"name": "resolution"
+									"name": "resolution",
+									"type": "String"
 								}
 							},
 							{
@@ -192,7 +206,8 @@
 									"path": "$['police_district']"
 								},
 								"sink": {
-									"name": "police_district"
+									"name": "police_district",
+									"type": "String"
 								}
 							},
 							{
@@ -200,7 +215,8 @@
 									"path": "$[':id']"
 								},
 								"sink": {
-									"name": ":id"
+									"name": ":id",
+									"type": "String"
 								}
 							},
 							{
@@ -208,7 +224,8 @@
 									"path": "$[':created_at']"
 								},
 								"sink": {
-									"name": ":created_at"
+									"name": ":created_at",
+									"type": "DateTime"
 								}
 							},
 							{
@@ -216,7 +233,8 @@
 									"path": "$[':updated_at']"
 								},
 								"sink": {
-									"name": ":updated_at"
+									"name": ":updated_at",
+									"type": "DateTime"
 								}
 							},
 							{
@@ -224,7 +242,8 @@
 									"path": "$['cad_number']"
 								},
 								"sink": {
-									"name": "cad_number"
+									"name": "cad_number",
+									"type": "Int32"
 								}
 							},
 							{
@@ -232,7 +251,8 @@
 									"path": "$['intersection']"
 								},
 								"sink": {
-									"name": "intersection"
+									"name": "intersection",
+									"type": "String"
 								}
 							},
 							{
@@ -240,7 +260,8 @@
 									"path": "$['cnn']"
 								},
 								"sink": {
-									"name": "cnn"
+									"name": "cnn",
+									"type": "Int32"
 								}
 							},
 							{
@@ -248,7 +269,8 @@
 									"path": "$['analysis_neighborhood']"
 								},
 								"sink": {
-									"name": "analysis_neighborhood"
+									"name": "analysis_neighborhood",
+									"type": "String"
 								}
 							},
 							{
@@ -256,7 +278,8 @@
 									"path": "$['supervisor_district']"
 								},
 								"sink": {
-									"name": "supervisor_district"
+									"name": "supervisor_district",
+									"type": "Int16"
 								}
 							},
 							{
@@ -264,7 +287,8 @@
 									"path": "$['supervisor_district_2012']"
 								},
 								"sink": {
-									"name": "supervisor_district_2012"
+									"name": "supervisor_district_2012",
+									"type": "Int16"
 								}
 							},
 							{
@@ -272,7 +296,8 @@
 									"path": "$['latitude']"
 								},
 								"sink": {
-									"name": "latitude"
+									"name": "latitude",
+									"type": "Decimal"
 								}
 							},
 							{
@@ -280,23 +305,8 @@
 									"path": "$['longitude']"
 								},
 								"sink": {
-									"name": "longitude"
-								}
-							},
-							{
-								"source": {
-									"path": "$['point']['type']"
-								},
-								"sink": {
-									"name": "type"
-								}
-							},
-							{
-								"source": {
-									"path": "$['point']['coordinates'][0]"
-								},
-								"sink": {
-									"name": "items"
+									"name": "longitude",
+									"type": "Decimal"
 								}
 							}
 						],
