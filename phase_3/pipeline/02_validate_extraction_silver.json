@@ -53,7 +53,8 @@
 									"path": "$['incident_datetime']"
 								},
 								"sink": {
-									"name": "incident_datetime"
+									"name": "incident_datetime",
+									"type": "DateTime"
 								}
 							},
 							{
@@ -61,7 +62,8 @@
 									"path": "$['incident_date']"
 								},
 								"sink": {
-									"name": "incident_date"
+									"name": "incident_date",
+									"type": "DateTime"
 								}
 							},
 							{
@@ -69,7 +71,8 @@
 									"path": "$['incident_time']"
 								},
 								"sink": {
-									"name": "incident_time"
+									"name": "incident_time",
+									"type": "TimeSpan"
 								}
 							},
 							{
