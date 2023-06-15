@@ -79,40 +79,15 @@
 
 > My thoughts about the classes diagram looks like:
 
-```
-utils.py
-    Utils
-        modify_entry_params()
-        logger
+![](/phase_2/images/classes_diagram.png)
 
-socrata.py
-    Params
-    Socrata
-	    api_connection()
-		logger
-
-storage.py
-    Client
-        client_storage()
-        logger
-    Bucket
-        bucket_obj()
-        logger
-    Blob
-        list_blobs() 
-		logger
-    Blob_obj
-        blob_obj()
-        logger
-
-data_ingestion.py
-    Data
-        list_dates()
-        ingestion()
-        logger
-main.py 
-```
 ## The development of medallion architecture in Azure Platform - phase 3
+
+### San Francisco Police Department Data Dictionary
+
+This dictionary below was developed for the stakeholders, business analysts and people interested in get a nice understanding about what represents every aspect of the Police Department Data, the underlying structure and datatypes. Later in this project it will be rollout to Purview, a Data Governance Application [here](https://azure.microsoft.com/en-us/products/purview).
+
+![](/phase_3/images/data_dictionary.png)
 
 ### 01-raw
 
