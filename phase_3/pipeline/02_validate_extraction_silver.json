@@ -310,7 +310,8 @@
 								}
 							}
 						],
-						"collectionReference": "$['point']['coordinates']"
+						"collectionReference": "$['point']['coordinates']",
+						"mapComplexValuesToString": false
 					}
 				},
 				"inputs": [
@@ -455,7 +456,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "02_append_trigger_time_silver",
+						"referenceName": "02_watermark_append_validate_data_silver",
 						"type": "DataFlowReference"
 					},
 					"compute": {
