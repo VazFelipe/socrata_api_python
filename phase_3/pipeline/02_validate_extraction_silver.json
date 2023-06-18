@@ -297,7 +297,7 @@
 								},
 								"sink": {
 									"name": "latitude",
-									"type": "Decimal"
+									"type": "Double"
 								}
 							},
 							{
@@ -306,7 +306,7 @@
 								},
 								"sink": {
 									"name": "longitude",
-									"type": "Decimal"
+									"type": "Double"
 								}
 							}
 						],
