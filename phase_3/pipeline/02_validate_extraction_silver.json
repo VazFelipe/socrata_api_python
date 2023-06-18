@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Watermark unified",
+						"activity": "Watermark unified and validation",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -436,7 +436,7 @@
 				]
 			},
 			{
-				"name": "Watermark unified",
+				"name": "Watermark unified and validation",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
@@ -463,8 +463,11 @@
 						"coreCount": 8,
 						"computeType": "General"
 					},
-					"traceLevel": "Fine",
-					"runConcurrently": true
+					"traceLevel": "None",
+					"runConcurrently": true,
+					"cacheSinks": {
+						"firstRowOnly": true
+					}
 				}
 			}
 		],
