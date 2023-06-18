@@ -474,7 +474,7 @@
 		"parameters": {
 			"file_name": {
 				"type": "string",
-				"defaultValue": "san_francisco_police_department.parquet"
+				"defaultValue": "san_francisco_police_department_test_validation.parquet"
 			},
 			"dataset": {
 				"type": "string",
