@@ -35,7 +35,11 @@
 					"name": "LogLoad"
 				},
 				{
-					"name": "sink1"
+					"linkedService": {
+						"referenceName": "dls_socrata_api",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SFPDSilver"
 				}
 			],
 			"transformations": [
@@ -47,6 +51,10 @@
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     file_name as string,",
+				"     dataset as string",
+				"}",
 				"source(output(",
 				"          processing_mode as string,",
 				"          insert_datetime as string",
@@ -117,13 +125,18 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     partitionBy('hash', 1)) ~> LogLoad",
-				"derivedColumn1 sink(validateSchema: false,",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     fileSystem: '02-silver',",
+				"     folderPath: ($dataset),",
+				"     compressionCodec: 'snappy',",
+				"     partitionFileNames:[($file_name)],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     store: 'cache',",
-				"     format: 'inline',",
-				"     output: true,",
-				"     saveOrder: 1,",
 				"     mapColumn(",
 				"          {:created_at},",
 				"          {:id},",
@@ -156,7 +169,8 @@
 				"          supervisor_district,",
 				"          supervisor_district_2012,",
 				"          latitude_derived",
-				"     )) ~> sink1"
+				"     ),",
+				"     partitionBy('hash', 1)) ~> SFPDSilver"
 			]
 		}
 	}
