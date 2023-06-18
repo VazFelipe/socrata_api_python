@@ -33,11 +33,17 @@
 						"type": "DatasetReference"
 					},
 					"name": "LogLoad"
+				},
+				{
+					"name": "sink1"
 				}
 			],
 			"transformations": [
 				{
 					"name": "unionWatermarkToLog"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -97,6 +103,7 @@
 				"     wildcardPaths:['*/*/*/*.json'],",
 				"     partitionBy('hash', 1)) ~> SFPDRaw",
 				"LogSource, LogSourceTemplate union(byName: false)~> unionWatermarkToLog",
+				"SFPDRaw derive(latitude_derived = iifNull(latitude, 37.774929)) ~> derivedColumn1",
 				"unionWatermarkToLog sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -109,7 +116,47 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
-				"     partitionBy('hash', 1)) ~> LogLoad"
+				"     partitionBy('hash', 1)) ~> LogLoad",
+				"derivedColumn1 sink(validateSchema: false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     store: 'cache',",
+				"     format: 'inline',",
+				"     output: true,",
+				"     saveOrder: 1,",
+				"     mapColumn(",
+				"          {:created_at},",
+				"          {:id},",
+				"          {:updated_at},",
+				"          analysis_neighborhood,",
+				"          cad_number,",
+				"          cnn,",
+				"          filed_online,",
+				"          incident_category,",
+				"          incident_code,",
+				"          incident_date,",
+				"          incident_datetime,",
+				"          incident_day_of_week,",
+				"          incident_description,",
+				"          incident_id,",
+				"          incident_number,",
+				"          incident_subcategory,",
+				"          incident_time,",
+				"          incident_year,",
+				"          intersection,",
+				"          latitude = latitude_derived,",
+				"          longitude,",
+				"          point,",
+				"          police_district,",
+				"          report_datetime,",
+				"          report_type_code,",
+				"          report_type_description,",
+				"          resolution,",
+				"          row_id,",
+				"          supervisor_district,",
+				"          supervisor_district_2012,",
+				"          latitude_derived",
+				"     )) ~> sink1"
 			]
 		}
 	}
