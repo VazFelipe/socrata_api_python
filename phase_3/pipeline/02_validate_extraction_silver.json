@@ -311,7 +311,7 @@
 							}
 						],
 						"collectionReference": "$['point']['coordinates']",
-						"mapComplexValuesToString": false
+						"mapComplexValuesToString": true
 					}
 				},
 				"inputs": [
