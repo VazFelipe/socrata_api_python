@@ -111,7 +111,7 @@
 				"     wildcardPaths:['*/*/*/*.json'],",
 				"     partitionBy('hash', 1)) ~> SFPDRaw",
 				"LogSource, LogSourceTemplate union(byName: false)~> unionWatermarkToLog",
-				"SFPDRaw derive(latitude_derived = iifNull(latitude, 37.774929)) ~> derivedColumn1",
+				"SFPDRaw derive(latitude_derived = toDecimal(iifNull(latitude, 37.774929),38,6)) ~> derivedColumn1",
 				"unionWatermarkToLog sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
