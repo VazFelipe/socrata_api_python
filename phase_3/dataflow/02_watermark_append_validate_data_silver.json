@@ -1,0 +1,186 @@
+{
+	"name": "02_watermark_append_validate_data_silver",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SFPD_log_template_silver",
+						"type": "DatasetReference"
+					},
+					"name": "LogSourceTemplate"
+				},
+				{
+					"dataset": {
+						"referenceName": "SFPD_log_silver",
+						"type": "DatasetReference"
+					},
+					"name": "LogSource"
+				},
+				{
+					"linkedService": {
+						"referenceName": "dls_socrata_api",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SFPDRaw"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "SFPD_log_silver",
+						"type": "DatasetReference"
+					},
+					"name": "LogLoad"
+				},
+				{
+					"linkedService": {
+						"referenceName": "dls_socrata_api",
+						"type": "LinkedServiceReference"
+					},
+					"name": "SFPDSilver"
+				}
+			],
+			"transformations": [
+				{
+					"name": "unionWatermarkToLog"
+				},
+				{
+					"name": "validations"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     file_name as string,",
+				"     dataset as string",
+				"}",
+				"source(output(",
+				"          processing_mode as string,",
+				"          insert_datetime as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> LogSourceTemplate",
+				"source(output(",
+				"          processing_mode as string,",
+				"          insert_datetime as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> LogSource",
+				"source(output(",
+				"          {:created_at} as string,",
+				"          {:id} as string,",
+				"          {:updated_at} as string,",
+				"          analysis_neighborhood as string,",
+				"          cad_number as integer,",
+				"          cnn as decimal(8,0),",
+				"          filed_online as boolean,",
+				"          incident_category as string,",
+				"          incident_code as integer,",
+				"          incident_date as string,",
+				"          incident_datetime as string,",
+				"          incident_day_of_week as string,",
+				"          incident_description as string,",
+				"          incident_id as integer,",
+				"          incident_number as integer,",
+				"          incident_subcategory as string,",
+				"          incident_time as string,",
+				"          incident_year as integer,",
+				"          intersection as string,",
+				"          latitude as decimal(17,15),",
+				"          longitude as decimal(17,14),",
+				"          point as (coordinates as decimal(17,15)[], type as string),",
+				"          police_district as string,",
+				"          report_datetime as string,",
+				"          report_type_code as string,",
+				"          report_type_description as string,",
+				"          resolution as string,",
+				"          row_id as long,",
+				"          supervisor_district as integer,",
+				"          supervisor_district_2012 as integer",
+				"     ),",
+				"     useSchema: false,",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false,",
+				"     format: 'json',",
+				"     fileSystem: '01-raw',",
+				"     documentForm: 'documentPerLine',",
+				"     wildcardPaths:['*/*/*/*.json'],",
+				"     partitionBy('hash', 1)) ~> SFPDRaw",
+				"LogSource, LogSourceTemplate union(byName: false)~> unionWatermarkToLog",
+				"SFPDRaw derive(latitude_derived = toString(toDecimal(iifNull(latitude, 37.774929),38,6)),",
+				"          longitude_derived = toString(toDecimal(iifNull(longitude, 37.774929),38,6)),",
+				"          cad_number_derived = toString(iif((isNull(cad_number) && isNull(filed_online)) || (isNull(cad_number) && filed_online == true()), 'Not applicable', toString(cad_number))),",
+				"          incident_category_derived = toString(iifNull(toString(incident_category), 'Not applicable', toString(incident_category))),",
+				"          incident_subcategory_derived = toString(iifNull(toString(incident_subcategory), 'Not applicable', toString(incident_subcategory))),",
+				"          intersection_derived = toString(iifNull(toString(intersection), 'Not applicable', toString(intersection))),",
+				"          centerline_node_network_derived = toString(iifNull(toString(cnn), 'Not applicable', toString(cnn))),",
+				"          analysis_neighborhood_derived = toString(iifNull(toString(analysis_neighborhood), 'Not applicable', toString(analysis_neighborhood))),",
+				"          supervisor_district_derived = toString(iifNull(supervisor_district, 0, supervisor_district)),",
+				"          supervisor_district_2012_derived = toString(iifNull(supervisor_district_2012, 0, supervisor_district_2012)),",
+				"          filed_online_derived = toBoolean(iifNull(toString(filed_online), toString('false'), toString(filed_online)))) ~> validations",
+				"unionWatermarkToLog sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          processing_mode as string,",
+				"          insert_datetime as string",
+				"     ),",
+				"     partitionFileNames:['ingestion_api_socrata.log'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> LogLoad",
+				"validations sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     fileSystem: '02-silver',",
+				"     folderPath: ($dataset),",
+				"     compressionCodec: 'snappy',",
+				"     partitionFileNames:[($file_name)],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          {:created_at},",
+				"          {:id},",
+				"          {:updated_at},",
+				"          analysis_neighborhood = analysis_neighborhood_derived,",
+				"          cad_number = cad_number_derived,",
+				"          centerline_node_network = centerline_node_network_derived,",
+				"          filed_online = filed_online_derived,",
+				"          incident_category = incident_category_derived,",
+				"          incident_code,",
+				"          incident_date,",
+				"          incident_datetime,",
+				"          incident_day_of_week,",
+				"          incident_description,",
+				"          incident_id,",
+				"          incident_number,",
+				"          incident_subcategory = incident_subcategory_derived,",
+				"          incident_time,",
+				"          incident_year,",
+				"          intersection = intersection_derived,",
+				"          latitude = latitude_derived,",
+				"          longitude = longitude_derived,",
+				"          point,",
+				"          police_district,",
+				"          report_datetime,",
+				"          report_type_code,",
+				"          report_type_description,",
+				"          resolution,",
+				"          row_id,",
+				"          supervisor_district = supervisor_district_derived,",
+				"          supervisor_district_2012 = supervisor_district_2012_derived",
+				"     ),",
+				"     partitionBy('hash', 1)) ~> SFPDSilver"
+			]
+		}
+	}
+}
