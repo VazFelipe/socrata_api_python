@@ -1678,7 +1678,7 @@
 						"     partitionBy('hash', 1)) ~> SFPDRaw",
 						"LogSource, LogSourceTemplate union(byName: false)~> unionWatermarkToLog",
 						"SFPDRaw derive(latitude_derived = toString(toDecimal(iifNull(latitude, 37.774929),38,6)),",
-						"          longitude_derived = toString(toDecimal(iifNull(longitude, 37.774929),38,6)),",
+						"          longitude_derived = toString(toDecimal(iifNull(longitude, -122.419416),38,6)),",
 						"          cad_number_derived = toString(iif((isNull(cad_number) && isNull(filed_online)) || (isNull(cad_number) && filed_online == true()), 'Not applicable', toString(cad_number))),",
 						"          incident_category_derived = toString(iifNull(toString(incident_category), 'Not applicable', toString(incident_category))),",
 						"          incident_subcategory_derived = toString(iifNull(toString(incident_subcategory), 'Not applicable', toString(incident_subcategory))),",
