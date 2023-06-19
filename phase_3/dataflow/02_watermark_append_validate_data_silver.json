@@ -47,7 +47,8 @@
 					"name": "unionWatermarkToLog"
 				},
 				{
-					"name": "validations"
+					"name": "validations",
+					"description": "Creating/updating the columns 'analysis_neighborhood, cad_number, cnn, filed_online, incident_category, incident_subcategory, intersection, latitude, longitude, police_district, supervisor_district, supervisor_district_2012'"
 				}
 			],
 			"scriptLines": [
