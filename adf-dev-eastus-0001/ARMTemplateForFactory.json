@@ -82,6 +82,12 @@
 						"name": "trigger_time",
 						"type": "SetVariable",
 						"dependsOn": [],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "trigger_time",
@@ -102,6 +108,12 @@
 								]
 							}
 						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "unix_trigger_time",
@@ -122,6 +134,12 @@
 								]
 							}
 						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "trigger_time_year",
@@ -142,6 +160,12 @@
 								]
 							}
 						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "trigger_time_month",
@@ -301,6 +325,12 @@
 								]
 							}
 						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "file_path",
@@ -321,6 +351,12 @@
 								]
 							}
 						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "file_name",
@@ -487,6 +523,12 @@
 								]
 							}
 						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "start_date",
@@ -507,6 +549,12 @@
 								]
 							}
 						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "end_date",
@@ -559,6 +607,12 @@
 								]
 							}
 						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "insert_datetime",
@@ -579,6 +633,12 @@
 								]
 							}
 						],
+						"policy": {
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
 						"userProperties": [],
 						"typeProperties": {
 							"variableName": "url_api",
@@ -684,341 +744,6 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "From raw to silver layer",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Watermark unified",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "JsonSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*.json",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "JsonReadSettings"
-								}
-							},
-							"sink": {
-								"type": "ParquetSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings",
-									"copyBehavior": "MergeFiles"
-								},
-								"formatSettings": {
-									"type": "ParquetWriteSettings"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"path": "$['incident_datetime']"
-										},
-										"sink": {
-											"name": "incident_datetime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"path": "$['incident_date']"
-										},
-										"sink": {
-											"name": "incident_date",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"path": "$['incident_time']"
-										},
-										"sink": {
-											"name": "incident_time",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['incident_year']"
-										},
-										"sink": {
-											"name": "incident_year",
-											"type": "Int16"
-										}
-									},
-									{
-										"source": {
-											"path": "$['incident_day_of_week']"
-										},
-										"sink": {
-											"name": "incident_day_of_week",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['report_datetime']"
-										},
-										"sink": {
-											"name": "report_datetime",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"path": "$['row_id']"
-										},
-										"sink": {
-											"name": "row_id",
-											"type": "Int64"
-										}
-									},
-									{
-										"source": {
-											"path": "$['incident_id']"
-										},
-										"sink": {
-											"name": "incident_id",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"path": "$['incident_number']"
-										},
-										"sink": {
-											"name": "incident_number",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"path": "$['report_type_code']"
-										},
-										"sink": {
-											"name": "report_type_code",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['report_type_description']"
-										},
-										"sink": {
-											"name": "report_type_description",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['filed_online']"
-										},
-										"sink": {
-											"name": "filed_online",
-											"type": "Boolean"
-										}
-									},
-									{
-										"source": {
-											"path": "$['incident_code']"
-										},
-										"sink": {
-											"name": "incident_code",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"path": "$['incident_category']"
-										},
-										"sink": {
-											"name": "incident_category",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['incident_subcategory']"
-										},
-										"sink": {
-											"name": "incident_subcategory",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['incident_description']"
-										},
-										"sink": {
-											"name": "incident_description",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['resolution']"
-										},
-										"sink": {
-											"name": "resolution",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['police_district']"
-										},
-										"sink": {
-											"name": "police_district",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$[':id']"
-										},
-										"sink": {
-											"name": ":id",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$[':created_at']"
-										},
-										"sink": {
-											"name": ":created_at",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"path": "$[':updated_at']"
-										},
-										"sink": {
-											"name": ":updated_at",
-											"type": "DateTime"
-										}
-									},
-									{
-										"source": {
-											"path": "$['cad_number']"
-										},
-										"sink": {
-											"name": "cad_number",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"path": "$['intersection']"
-										},
-										"sink": {
-											"name": "intersection",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['cnn']"
-										},
-										"sink": {
-											"name": "cnn",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"path": "$['analysis_neighborhood']"
-										},
-										"sink": {
-											"name": "analysis_neighborhood",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"path": "$['supervisor_district']"
-										},
-										"sink": {
-											"name": "supervisor_district",
-											"type": "Int16"
-										}
-									},
-									{
-										"source": {
-											"path": "$['supervisor_district_2012']"
-										},
-										"sink": {
-											"name": "supervisor_district_2012",
-											"type": "Int16"
-										}
-									},
-									{
-										"source": {
-											"path": "$['latitude']"
-										},
-										"sink": {
-											"name": "latitude",
-											"type": "Decimal"
-										}
-									},
-									{
-										"source": {
-											"path": "$['longitude']"
-										},
-										"sink": {
-											"name": "longitude",
-											"type": "Decimal"
-										}
-									}
-								],
-								"collectionReference": "$['point']['coordinates']"
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SFPD_raw",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SFPD_parquet_silver",
-								"type": "DatasetReference",
-								"parameters": {
-									"file_name": {
-										"value": "@pipeline().parameters.file_name",
-										"type": "Expression"
-									},
-									"dataset": {
-										"value": "@pipeline().parameters.dataset",
-										"type": "Expression"
-									}
-								}
-							}
-						]
-					},
-					{
 						"name": "Copy watermark to blob",
 						"type": "Copy",
 						"dependsOn": [],
@@ -1119,7 +844,7 @@
 						]
 					},
 					{
-						"name": "Watermark unified",
+						"name": "Watermark unified and validation",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [
 							{
@@ -1139,13 +864,24 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "02_append_trigger_time_silver",
+								"referenceName": "02_watermark_append_validate_data_silver",
 								"type": "DataFlowReference",
-								"parameters": {},
+								"parameters": {
+									"file_name": {
+										"value": "'@{pipeline().parameters.file_name}'",
+										"type": "Expression"
+									},
+									"dataset": {
+										"value": "'@{pipeline().parameters.dataset}'",
+										"type": "Expression"
+									}
+								},
 								"datasetParameters": {
 									"LogSourceTemplate": {},
 									"LogSource": {},
-									"LogLoad": {}
+									"SFPDRaw": {},
+									"LogLoad": {},
+									"SFPDSilver": {}
 								}
 							},
 							"staging": {},
@@ -1153,8 +889,9 @@
 								"coreCount": 8,
 								"computeType": "General"
 							},
-							"traceLevel": "Fine",
-							"runConcurrently": true
+							"traceLevel": "None",
+							"runConcurrently": true,
+							"cacheSinks": {}
 						}
 					}
 				],
@@ -1180,10 +917,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SFPD_raw')]",
-				"[concat(variables('factoryId'), '/datasets/SFPD_parquet_silver')]",
 				"[concat(variables('factoryId'), '/datasets/SFPD_log_template_silver')]",
-				"[concat(variables('factoryId'), '/dataflows/02_append_trigger_time_silver')]"
+				"[concat(variables('factoryId'), '/dataflows/02_watermark_append_validate_data_silver')]"
 			]
 		},
 		{
@@ -1828,7 +1563,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/02_append_trigger_time_silver')]",
+			"name": "[concat(parameters('factoryName'), '/02_watermark_append_validate_data_silver')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1848,6 +1583,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "LogSource"
+						},
+						{
+							"linkedService": {
+								"referenceName": "dls_socrata_api",
+								"type": "LinkedServiceReference"
+							},
+							"name": "SFPDRaw"
 						}
 					],
 					"sinks": [
@@ -1857,14 +1599,28 @@
 								"type": "DatasetReference"
 							},
 							"name": "LogLoad"
+						},
+						{
+							"linkedService": {
+								"referenceName": "dls_socrata_api",
+								"type": "LinkedServiceReference"
+							},
+							"name": "SFPDSilver"
 						}
 					],
 					"transformations": [
 						{
-							"name": "union1"
+							"name": "unionWatermarkToLog"
+						},
+						{
+							"name": "validations"
 						}
 					],
 					"scriptLines": [
+						"parameters{",
+						"     file_name as string,",
+						"     dataset as string",
+						"}",
 						"source(output(",
 						"          processing_mode as string,",
 						"          insert_datetime as string",
@@ -1879,8 +1635,60 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     ignoreNoFilesFound: false) ~> LogSource",
-						"LogSource, LogSourceTemplate union(byName: false)~> union1",
-						"union1 sink(allowSchemaDrift: true,",
+						"source(output(",
+						"          {:created_at} as string,",
+						"          {:id} as string,",
+						"          {:updated_at} as string,",
+						"          analysis_neighborhood as string,",
+						"          cad_number as integer,",
+						"          cnn as decimal(8,0),",
+						"          filed_online as boolean,",
+						"          incident_category as string,",
+						"          incident_code as integer,",
+						"          incident_date as string,",
+						"          incident_datetime as string,",
+						"          incident_day_of_week as string,",
+						"          incident_description as string,",
+						"          incident_id as integer,",
+						"          incident_number as integer,",
+						"          incident_subcategory as string,",
+						"          incident_time as string,",
+						"          incident_year as integer,",
+						"          intersection as string,",
+						"          latitude as decimal(17,15),",
+						"          longitude as decimal(17,14),",
+						"          point as (coordinates as decimal(17,15)[], type as string),",
+						"          police_district as string,",
+						"          report_datetime as string,",
+						"          report_type_code as string,",
+						"          report_type_description as string,",
+						"          resolution as string,",
+						"          row_id as long,",
+						"          supervisor_district as integer,",
+						"          supervisor_district_2012 as integer",
+						"     ),",
+						"     useSchema: false,",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     format: 'json',",
+						"     fileSystem: '01-raw',",
+						"     documentForm: 'documentPerLine',",
+						"     wildcardPaths:['*/*/*/*.json'],",
+						"     partitionBy('hash', 1)) ~> SFPDRaw",
+						"LogSource, LogSourceTemplate union(byName: false)~> unionWatermarkToLog",
+						"SFPDRaw derive(latitude_derived = toString(toDecimal(iifNull(latitude, 37.774929),38,6)),",
+						"          longitude_derived = toString(toDecimal(iifNull(longitude, 37.774929),38,6)),",
+						"          cad_number_derived = toString(iif((isNull(cad_number) && isNull(filed_online)) || (isNull(cad_number) && filed_online == true()), 'Not applicable', toString(cad_number))),",
+						"          incident_category_derived = toString(iifNull(toString(incident_category), 'Not applicable', toString(incident_category))),",
+						"          incident_subcategory_derived = toString(iifNull(toString(incident_subcategory), 'Not applicable', toString(incident_subcategory))),",
+						"          intersection_derived = toString(iifNull(toString(intersection), 'Not applicable', toString(intersection))),",
+						"          centerline_node_network_derived = toString(iifNull(toString(cnn), 'Not applicable', toString(cnn))),",
+						"          analysis_neighborhood_derived = toString(iifNull(toString(analysis_neighborhood), 'Not applicable', toString(analysis_neighborhood))),",
+						"          supervisor_district_derived = toString(iifNull(supervisor_district, 0, supervisor_district)),",
+						"          supervisor_district_2012_derived = toString(iifNull(supervisor_district_2012, 0, supervisor_district_2012)),",
+						"          filed_online_derived = toBoolean(iifNull(toString(filed_online), toString('false'), toString(filed_online)))) ~> validations",
+						"unionWatermarkToLog sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
 						"          processing_mode as string,",
@@ -1892,13 +1700,59 @@
 						"     postCommands: [],",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> LogLoad"
+						"     partitionBy('hash', 1)) ~> LogLoad",
+						"validations sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'parquet',",
+						"     fileSystem: '02-silver',",
+						"     folderPath: ($dataset),",
+						"     compressionCodec: 'snappy',",
+						"     partitionFileNames:[($file_name)],",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          {:created_at},",
+						"          {:id},",
+						"          {:updated_at},",
+						"          analysis_neighborhood = analysis_neighborhood_derived,",
+						"          cad_number = cad_number_derived,",
+						"          centerline_node_network = centerline_node_network_derived,",
+						"          filed_online = filed_online_derived,",
+						"          incident_category = incident_category_derived,",
+						"          incident_code,",
+						"          incident_date,",
+						"          incident_datetime,",
+						"          incident_day_of_week,",
+						"          incident_description,",
+						"          incident_id,",
+						"          incident_number,",
+						"          incident_subcategory = incident_subcategory_derived,",
+						"          incident_time,",
+						"          incident_year,",
+						"          intersection = intersection_derived,",
+						"          latitude = latitude_derived,",
+						"          longitude = longitude_derived,",
+						"          point,",
+						"          police_district,",
+						"          report_datetime,",
+						"          report_type_code,",
+						"          report_type_description,",
+						"          resolution,",
+						"          row_id,",
+						"          supervisor_district = supervisor_district_derived,",
+						"          supervisor_district_2012 = supervisor_district_2012_derived",
+						"     ),",
+						"     partitionBy('hash', 1)) ~> SFPDSilver"
 					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SFPD_log_template_silver')]",
-				"[concat(variables('factoryId'), '/datasets/SFPD_log_silver')]"
+				"[concat(variables('factoryId'), '/datasets/SFPD_log_silver')]",
+				"[concat(variables('factoryId'), '/linkedServices/dls_socrata_api')]"
 			]
 		},
 		{
