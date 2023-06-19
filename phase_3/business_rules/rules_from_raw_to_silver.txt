@@ -1,0 +1,33 @@
+cad_number_derived
+toString(iif((isNull(cad_number) && isNull(filed_online)) || (isNull(cad_number) && filed_online == true()), 'Not applicable', toString(cad_number)))
+
+incident_category_derived
+toString(iifNull(toString(incident_category), 'Not applicable', toString(incident_category)))
+
+incident_subcategory_derived
+toString(iifNull(toString(incident_subcategory), 'Not applicable', toString(incident_subcategory)))
+
+intersection_derived
+toString(iifNull(toString(intersection), 'Not applicable', toString(intersection)))
+
+centerline_node_network_derived
+toString(iifNull(toString(cnn), 'Not applicable', toString(cnn)))
+
+analysis_neighborhood_derived
+toString(iifNull(toString(analysis_neighborhood), 'Not applicable', toString(analysis_neighborhood)))
+
+supervisor_district_derived
+toString(iifNull(supervisor_district, 0, supervisor_district))
+
+supervisor_district_2012_derived
+toString(iifNull(supervisor_district_2012, 0, supervisor_district_2012))
+
+latitude_derived
+iifNull(latitude, 0.0, latitude)
+
+longitude_derived
+iifNull(longitude, 0.0, longitude)
+
+filed_online_derived
+toBoolean(iifNull(toString(filed_online), toString('false'), toString(filed_online)))
+
