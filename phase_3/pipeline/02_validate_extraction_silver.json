@@ -139,17 +139,14 @@
 						"computeType": "General"
 					},
 					"traceLevel": "None",
-					"runConcurrently": true,
-					"cacheSinks": {
-						"firstRowOnly": false
-					}
+					"runConcurrently": true
 				}
 			}
 		],
 		"parameters": {
 			"file_name": {
 				"type": "string",
-				"defaultValue": "san_francisco_police_department_test_validation.parquet"
+				"defaultValue": "san_francisco_police_department.parquet"
 			},
 			"dataset": {
 				"type": "string",
