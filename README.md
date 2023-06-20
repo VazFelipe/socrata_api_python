@@ -134,7 +134,7 @@ _"The San Francisco Police Department’s (SFPD) Incident Report Datatset is one
 #### Collaboration
 > If I had a PO (Product Onwer) working in this project I would like to ask him:
 
-_**Why incident codes** in 4164, 6351, 6352, 6353, 6354, 6377, 6378, 6399, 7060, 9171, 12020, 12073, 12075, 13072, 15164, 15165, 15410, 27400, 27401, 64100, 65021, 74020, 74022, 74024, 75011 represents 652 incidents that has not category or subcategory. Those incidents have been filed category and subcategory as NA (Not applicable). Is there any business reference to better deliver this value to the business areas?_
+_**Why incident codes** in 4164, 6351, 6352, 6353, 6354, 6377, 6378, 6399, 7060, 9171, 12020, 12073, 12075, 13072, 15164, 15165, 15410, 27400, 27401, 64100, 65021, 74020, 74022, 74024, 75011 represents 652 incidents that has not category or subcategory? Those incidents have been filed category and subcategory as NA (Not applicable). Is there any business reference to better deliver this value to the business areas?_
 
 _**Why police district** has "Out of SF" category inside the San Francisco boundaries? Using the geo data "All Cases Map View" from Socrata API could solve this latitude and longitude nulls? More details in sfpd_analysis_neighborhood_with_out_of_SF_and_geolocation_nulls.csv. I have applied latitude as 37.774929 and longitude as -122.419416 in case of nulls that represents the San Francisco boundaries._
 
