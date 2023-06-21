@@ -1,4 +1,4 @@
-# Personal Project: Data Engineering Practices
+# Personal Project: Data Engineering Lifecycle
 
 ## Contents
 
