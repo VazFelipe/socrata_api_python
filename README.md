@@ -5,7 +5,7 @@
 - [The dataset](#the-police-department-incident-reports)
 - [The raw ingestion phase 1](#the-raw-ingestion-using-python-functional-programming-best-practices-phase-1)
 - [The raw ingestion phase 2](#the-raw-ingestion-using-python-best-practices-classes---phase-2)
-- [The medallion architecture](#the-development-of-medallion-architecture-in-azure-platform---phase-3)
+- [The medallion architecture phase 3](#the-development-of-medallion-architecture-in-azure-platform---phase-3)
 - [The raw ingestion in Azure](#01-raw)
 - [The silver layer in Azure](#02-silver)
 - [The data profiling in silver layer](#data-profiling)
