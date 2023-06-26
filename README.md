@@ -2,14 +2,16 @@
 
 ## Contents
 
-- [The dataset](#the-police-department-incident-reports)
-- [The raw ingestion phase 1](#the-raw-ingestion-using-python-functional-programming-best-practices-phase-1)
-- [The raw ingestion phase 2](#the-raw-ingestion-using-python-best-practices-classes---phase-2)
+- [The San Francisco Police Department dataset](#the-police-department-incident-reports)
+- [The raw ingestion phase 1 FP](#the-raw-ingestion-using-python-functional-programming-best-practices-phase-1)
+- [The raw ingestion phase 2 OOP](#the-raw-ingestion-using-python-best-practices-classes---phase-2)
 - [The medallion architecture phase 3](#the-development-of-medallion-architecture-in-azure-platform---phase-3)
 - [The raw ingestion in Azure](#01-raw)
 - [The silver layer in Azure](#02-silver)
 - [The data profiling in silver layer](#data-profiling)
 - [Asking for help in a team scenario](#collaboration)
+- [The gold layer in Azure](#03-gold--doing)
+- [The delivering of metrics](#the-metrics-panel--doing)
 
 ## The Police Department Incident Reports
 
@@ -140,4 +142,31 @@ _**Why police district** has "Out of SF" category inside the San Francisco bound
 
 [get back to contents](#contents)
 
-### 03-gold ::: TO DO :::
+### 03-gold
+
+#### The metrics panel ::: DOING :::
+
+> Using the reporting requirements from the Law Enforcement Agencies, the California Cities reports "_any complaints alleging racial
+or identity profiling and detailed demographic data for traffic and pedestrian stops_" since 2016.
+
+> The SFPD dataset provides the most used report and an unique information for police and crime analysis. The incident report filled and displayed in this project was approved by a Sergeant or Lieutenant and does not provide:
+
+- The incident report does not provide information of any person
+- The incident report does not provide incidents of juveniles
+- The incident report does not provide real location, only the intersection level will be displayed
+
+> The metrics panel will have the opportunity to clearly display daily information for the community regarding the Law Enforcement Agencies requirements.
+
+The metrics that is in development are:
+
+- number of incidents by
+    - incident datetime: day, month, year
+    - by day of week: sunday-saturday
+    - by resolution: open or active, unfounded, citation or arrest
+    - by district: SFDP districts
+    - by category: for example, Larceny Theft, Assault, Fraud
+    - by latitude and longitude: SFDP districts
+
+
+
+
