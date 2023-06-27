@@ -1,5 +1,10 @@
 {
 	"name": "adf-dev-eastus-0001",
+	"properties": {
+		"globalConfigurations": {
+			"PipelineBillingEnabled": "true"
+		}
+	},
 	"location": "eastus",
 	"identity": {
 		"type": "SystemAssigned",
