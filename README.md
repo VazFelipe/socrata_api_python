@@ -157,7 +157,7 @@ or identity profiling and detailed demographic data for traffic and pedestrian s
 
 > The metrics panel will have the opportunity to clearly display daily information for the community regarding the Law Enforcement Agencies requirements.
 
-The metrics that is in development are:
+**The metrics in development are:**
 
 - number of incidents by
     - incident datetime: day, month, year
@@ -167,6 +167,8 @@ The metrics that is in development are:
     - by category: for example, Larceny Theft, Assault, Fraud
     - by latitude and longitude: SFDP districts
 
+**The dashboard visual should display:**
 
+![](/phase_3/images/gold_metrics_all.png)
 
 
