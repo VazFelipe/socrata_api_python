@@ -2,7 +2,7 @@
 	"name": "adf-dev-eastus-0001",
 	"properties": {
 		"globalConfigurations": {
-			"PipelineBillingEnabled": "false"
+			"PipelineBillingEnabled": "true"
 		}
 	},
 	"location": "eastus",
