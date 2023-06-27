@@ -692,7 +692,8 @@
 							"name": "unionWatermarkToLog"
 						},
 						{
-							"name": "validations"
+							"name": "validations",
+							"description": "Creating/updating the columns 'analysis_neighborhood, cad_number, cnn, filed_online, incident_category, incident_subcategory, intersection, latitude, longitude, police_district, supervisor_district, supervisor_district_2012'"
 						}
 					],
 					"scriptLines": [
@@ -1111,7 +1112,9 @@
 									"type": "JsonWriteSettings"
 								}
 							},
-							"enableStaging": false
+							"enableStaging": false,
+							"parallelCopies": 1,
+							"dataIntegrationUnits": 2
 						},
 						"inputs": [
 							{
@@ -1693,6 +1696,8 @@
 								}
 							},
 							"enableStaging": false,
+							"parallelCopies": 1,
+							"dataIntegrationUnits": 2,
 							"translator": {
 								"type": "TabularTranslator",
 								"mappings": [
@@ -1825,7 +1830,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -1858,7 +1863,7 @@
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Started",
+				"runtimeState": "Stopped",
 				"pipelines": [
 					{
 						"pipelineReference": {
