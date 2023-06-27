@@ -2,7 +2,7 @@
 	"name": "everyday_210PM_Brasilia",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Stopped",
+		"runtimeState": "Started",
 		"pipelines": [
 			{
 				"pipelineReference": {
