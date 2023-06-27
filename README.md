@@ -10,7 +10,7 @@
 - [The silver layer in Azure](#02-silver)
 - [The data profiling in silver layer](#data-profiling)
 - [Asking for help in a team scenario](#collaboration)
-- [The gold layer in Azure](#03-gold--doing)
+- [The gold layer in Azure](#03-gold)
 - [The delivering of metrics](#the-metrics-panel--doing)
 
 ## The Police Department Incident Reports
@@ -157,6 +157,8 @@ or identity profiling and detailed demographic data for traffic and pedestrian s
 
 > The metrics panel will have the opportunity to clearly display daily information for the community regarding the Law Enforcement Agencies requirements.
 
+[get back to contents](#contents)
+
 **The metrics in development are:**
 
 - number of incidents by
@@ -171,4 +173,4 @@ or identity profiling and detailed demographic data for traffic and pedestrian s
 
 ![](/phase_3/images/gold_metrics_all.png)
 
-
+[get back to contents](#contents)
