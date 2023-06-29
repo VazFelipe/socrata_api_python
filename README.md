@@ -145,7 +145,7 @@ _**Why police district** has "Out of SF" category inside the San Francisco bound
 
 ### Pit Stop for Cost and Performance Optimization
 
-> While working on this amazing project I have facing challenges on cost. Maybe this is due my Pay-As-You-Go tier with Microsoft. I have started my free account and Microsoft gave me 200 dollars and access to monthly free amounts of popular services for 12 months [here](https://azure.microsoft.com/en-in/pricing/offers/ms-azr-0003p/). So, I spend it all, and my first invoice was terrible: R$ 374,00! What did I do wrong? I publish all my work without looking carefully to the cost of services.
+> While working on this amazing project I have facing challenges on cost. Maybe this is due my Pay-As-You-Go tier with Microsoft. I have started my free account and Microsoft gave me 200 dollars and access to monthly free amounts of popular services for 12 months [here](https://azure.microsoft.com/en-in/pricing/offers/ms-azr-0003p/). So, I spend it all, and my first invoice was terrible: R$ 374,00! What did I do wrong? I have published all my work without looking carefully to the cost of services.
 
 > Then, I have started googling and there is amazing references by Arindam [here](https://www.sqlservercentral.com/articles/understanding-azure-data-factory-pricing) and Deepak Goyal [here](https://azurelib.com/how-to-optimize-azure-data-factory-pricing/#Data_Pipelines_on_Azure_Integration_Runtime). In a glimpse, the primary rules: 
 
