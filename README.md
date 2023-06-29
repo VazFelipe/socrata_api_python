@@ -10,6 +10,7 @@
 - [The silver layer in Azure](#02-silver)
 - [The data profiling in silver layer](#data-profiling)
 - [Asking for help in a team scenario](#collaboration)
+- [Pit stop for Cost and Performance Optimization](#pit-stop-for-cost-and-performance-optimization)
 - [The gold layer in Azure](#03-gold)
 - [The delivering of metrics](#the-metrics-panel--doing)
 
@@ -139,6 +140,24 @@ _"The San Francisco Police Department’s (SFPD) Incident Report Datatset is one
 _**Why incident codes** in 4164, 6351, 6352, 6353, 6354, 6377, 6378, 6399, 7060, 9171, 12020, 12073, 12075, 13072, 15164, 15165, 15410, 27400, 27401, 64100, 65021, 74020, 74022, 74024, 75011 represents 652 incidents that has not category or subcategory? Those incidents have been filed category and subcategory as NA (Not applicable). Is there any business reference to better deliver this value to the business areas?_
 
 _**Why police district** has "Out of SF" category inside the San Francisco boundaries? Using the geo data "All Cases Map View" from Socrata API could solve this latitude and longitude nulls? More details in sfpd_analysis_neighborhood_with_out_of_SF_and_geolocation_nulls.csv. I have applied latitude as 37.774929 and longitude as -122.419416 in case of nulls that represents the San Francisco boundaries._
+
+[get back to contents](#contents)
+
+### Pit Stop for Cost and Performance Optimization
+
+> While working on this amazing project I have facing challenges on cost. Maybe this is due my Pay-As-You-Go tier with Microsoft. I have started my free account and Microsoft gave me 200 dollars and access to monthly free amounts of popular services for 12 months [here](https://azure.microsoft.com/en-in/pricing/offers/ms-azr-0003p/). So, I spend it all, and my first invoice was terrible: R$ 374,00! What did I do wrong? I publish all my work without looking carefully to the cost of services.
+
+> Then, I have started googling and there is amazing references by Arindam [here](https://www.sqlservercentral.com/articles/understanding-azure-data-factory-pricing) and Deepak Goyal [here](https://azurelib.com/how-to-optimize-azure-data-factory-pricing/#Data_Pipelines_on_Azure_Integration_Runtime). In a glimpse, the primary rules: 
+
+- Remove all unused pipeline as they also cost
+- Set the DIU to minimum value instead of keeping them as auto. (This could reduce the cost by half)
+- Reduce the number of activities if possible
+
+> And the results in cost and performance was terrific:
+
+![](/phase_3/images/cost_performance_optimization.png)
+
+> Take some time to get in touch on this documentation and enjoy a better cost and performance in your projects.
 
 [get back to contents](#contents)
 
