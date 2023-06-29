@@ -22,32 +22,6 @@
 				}
 			},
 			{
-				"name": "unix_trigger_time",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "trigger_time",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "unix_trigger_time",
-					"value": {
-						"value": "@string(sub(div(ticks(variables('trigger_time')),10000000),div(ticks(variables('param_epoch')),10000000)))",
-						"type": "Expression"
-					}
-				}
-			},
-			{
 				"name": "Socrata Api to Blob Storage Gen2",
 				"type": "Copy",
 				"dependsOn": [
@@ -147,11 +121,11 @@
 								"type": "Expression"
 							},
 							"file_path": {
-								"value": "@variables('file_path')",
+								"value": "@concat(concat(concat(concat(concat('01-raw/',pipeline().parameters.dataset,'/'), formatDateTime(variables('trigger_time'), 'yyyy')),'/'),formatDateTime(variables('trigger_time'), 'MM')),'/')",
 								"type": "Expression"
 							},
 							"file_name": {
-								"value": "@variables('file_name')",
+								"value": "@concat(concat(concat(concat(concat(concat(string(sub(div(ticks(variables('trigger_time')),10000000),div(ticks(variables('param_epoch')),10000000))),'_'),pipeline().parameters.field_name_1,'_'),pipeline().parameters.field_name_2),'_'),formatDateTime(replace(concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T00:00:00''')),'''',''), 'yyyyMMdd')),pipeline().parameters.response_format)",
 								"type": "Expression"
 							}
 						}
@@ -159,63 +133,11 @@
 				]
 			},
 			{
-				"name": "file_path",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "unix_trigger_time",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "file_path",
-					"value": {
-						"value": "@concat(concat(concat(concat(concat('01-raw/',pipeline().parameters.dataset,'/'), formatDateTime(variables('trigger_time'), 'yyyy')),'/'),formatDateTime(variables('trigger_time'), 'MM')),'/')",
-						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "file_name",
-				"type": "SetVariable",
-				"dependsOn": [
-					{
-						"activity": "file_path",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"variableName": "file_name",
-					"value": {
-						"value": "@concat(concat(concat(concat(concat(concat(variables('unix_trigger_time'),'_'),pipeline().parameters.field_name_1,'_'),pipeline().parameters.field_name_2),'_'),formatDateTime(replace(concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T00:00:00''')),'''',''), 'yyyyMMdd')),pipeline().parameters.response_format)",
-						"type": "Expression"
-					}
-				}
-			},
-			{
 				"name": "url_api",
 				"type": "SetVariable",
 				"dependsOn": [
 					{
-						"activity": "file_name",
+						"activity": "trigger_time",
 						"dependencyConditions": [
 							"Succeeded"
 						]
