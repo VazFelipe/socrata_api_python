@@ -109,12 +109,6 @@
 					"dls_socrata_api_properties_typeProperties_url": {
 						"value": "[parameters('dls_socrata_api_properties_typeProperties_url')]"
 					},
-					"everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_file_name": {
-						"value": "[parameters('everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_file_name')]"
-					},
-					"everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_dataset": {
-						"value": "[parameters('everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_dataset')]"
-					},
 					"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_exclude_system_fields": {
 						"value": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_exclude_system_fields')]"
 					},
@@ -138,6 +132,12 @@
 					},
 					"everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_where_2": {
 						"value": "[parameters('everyday_2PM_Brasilia_properties_01_extract_from_api_raw_parameters_where_2')]"
+					},
+					"everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_file_name": {
+						"value": "[parameters('everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_file_name')]"
+					},
+					"everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_dataset": {
+						"value": "[parameters('everyday_210PM_Brasilia_properties_02_validate_extraction_silver_parameters_dataset')]"
 					}
 				}
 			},

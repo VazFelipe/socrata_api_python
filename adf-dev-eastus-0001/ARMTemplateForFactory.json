@@ -98,84 +98,6 @@
 						}
 					},
 					{
-						"name": "unix_trigger_time",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "trigger_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "unix_trigger_time",
-							"value": {
-								"value": "@string(sub(div(ticks(variables('trigger_time')),10000000),div(ticks(variables('param_epoch')),10000000)))",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "trigger_time_year",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "insert_datetime",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "trigger_time_year",
-							"value": {
-								"value": "@formatDateTime(variables('insert_datetime'), 'yyyy')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "trigger_time_month",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "insert_datetime",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "trigger_time_month",
-							"value": {
-								"value": "@formatDateTime(variables('insert_datetime'), 'MM')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
 						"name": "Socrata Api to Blob Storage Gen2",
 						"type": "Copy",
 						"dependsOn": [
@@ -235,11 +157,11 @@
 										"type": "Expression"
 									},
 									"start_date": {
-										"value": "@variables('start_date')",
+										"value": "@concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T00:00:00'''))",
 										"type": "Expression"
 									},
 									"end_date": {
-										"value": "@variables('end_date')",
+										"value": "@concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T23:59:59'''))",
 										"type": "Expression"
 									},
 									"where_2": {
@@ -259,11 +181,11 @@
 										"type": "Expression"
 									},
 									"trigger_time_year": {
-										"value": "@variables('trigger_time_year')",
+										"value": "@formatDateTime(variables('trigger_time'), 'yyyy')",
 										"type": "Expression"
 									},
 									"trigger_time_month": {
-										"value": "@variables('trigger_time_month')",
+										"value": "@formatDateTime(variables('trigger_time'), 'MM')",
 										"type": "Expression"
 									},
 									"response_format": {
@@ -275,363 +197,23 @@
 										"type": "Expression"
 									},
 									"file_path": {
-										"value": "@variables('file_path')",
+										"value": "@concat(concat(concat(concat(concat('01-raw/',pipeline().parameters.dataset,'/'), formatDateTime(variables('trigger_time'), 'yyyy')),'/'),formatDateTime(variables('trigger_time'), 'MM')),'/')",
 										"type": "Expression"
 									},
 									"file_name": {
-										"value": "@variables('file_name')",
+										"value": "@concat(concat(concat(concat(concat(concat(string(sub(div(ticks(variables('trigger_time')),10000000),div(ticks(variables('param_epoch')),10000000))),'_'),pipeline().parameters.field_name_1,'_'),pipeline().parameters.field_name_2),'_'),formatDateTime(replace(concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T00:00:00''')),'''',''), 'yyyyMMdd')),pipeline().parameters.response_format)",
 										"type": "Expression"
 									}
 								}
 							}
 						]
-					},
-					{
-						"name": "file_path",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "unix_trigger_time",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "trigger_time_year",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "trigger_time_month",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "Watermark unified",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "start_date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							},
-							{
-								"activity": "end_date",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "file_path",
-							"value": {
-								"value": "@concat(concat(concat(concat(concat('01-raw/',pipeline().parameters.dataset,'/'), variables('trigger_time_year')),'/'),variables('trigger_time_month')),'/')",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "file_name",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "file_path",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "file_name",
-							"value": {
-								"value": "@concat(concat(concat(concat(concat(concat(variables('unix_trigger_time'),'_'),pipeline().parameters.field_name_1,'_'),pipeline().parameters.field_name_2),'_'),formatDateTime(replace(variables('start_date'),'''',''), 'yyyyMMdd')),pipeline().parameters.response_format)",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "Copy watermark to blob",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "insert_datetime",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"additionalColumns": [
-									{
-										"name": "processing_mode_",
-										"value": {
-											"value": "@string('FULL LOAD')",
-											"type": "Expression"
-										}
-									},
-									{
-										"name": "insert_datetime_",
-										"value": {
-											"value": "@addDays(variables('insert_datetime'),1)",
-											"type": "Expression"
-										}
-									}
-								],
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"parallelCopies": 1,
-							"dataIntegrationUnits": 2,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "processing_mode_",
-											"type": "String"
-										},
-										"sink": {
-											"name": "processing_mode",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "insert_datetime_",
-											"type": "String"
-										},
-										"sink": {
-											"name": "insert_datetime",
-											"type": "String",
-											"physicalType": "String"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "SFPD_log_template_raw",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SFPD_log_template_raw",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					},
-					{
-						"name": "Watermark unified",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "Copy watermark to blob",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "01_append_trigger_time_bronze",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"LogSourceTemplate": {},
-									"LogSource": {},
-									"LogLoad": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine",
-							"runConcurrently": true
-						}
-					},
-					{
-						"name": "start_date",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "insert_datetime",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "start_date",
-							"value": {
-								"value": "@concat('''',concat(formatDateTime(variables('insert_datetime'), 'yyyy-MM-dd'),'T00:00:00'''))",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "end_date",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "insert_datetime",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "end_date",
-							"value": {
-								"value": "@concat('''',concat(formatDateTime(variables('insert_datetime'), 'yyyy-MM-dd'),'T23:59:59'''))",
-								"type": "Expression"
-							}
-						}
-					},
-					{
-						"name": "ReadLogSource",
-						"type": "Lookup",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"dataset": {
-								"referenceName": "SFPD_log_raw",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"firstRowOnly": false
-						}
-					},
-					{
-						"name": "insert_datetime",
-						"type": "SetVariable",
-						"dependsOn": [
-							{
-								"activity": "ReadLogSource",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"variableName": "insert_datetime",
-							"value": {
-								"value": "@substring(string(activity('ReadLogSource').output.value[add(int(string(activity('ReadLogSource').output.count)),-1)]),50,20)",
-								"type": "Expression"
-							}
-						}
 					},
 					{
 						"name": "url_api",
 						"type": "SetVariable",
 						"dependsOn": [
 							{
-								"activity": "file_name",
+								"activity": "trigger_time",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -647,7 +229,7 @@
 						"typeProperties": {
 							"variableName": "url_api",
 							"value": {
-								"value": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',pipeline().parameters.exclude_system_fields),'&$limit='),pipeline().parameters.limit),'&$where='),'('),pipeline().parameters.where_1),'BETWEEN '),variables('start_date')),' AND '), variables('end_date')),') OR ('),pipeline().parameters.where_2),'BETWEEN '),variables('start_date')),' AND '), variables('end_date')),')')}",
+								"value": "@{concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat(concat('https://data.sfgov.org/resource/wg3w-h783.json?$$exclude_system_fields=',pipeline().parameters.exclude_system_fields),'&$limit='),pipeline().parameters.limit),'&$where='),'('),pipeline().parameters.where_1),'BETWEEN '),concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T00:00:00'''))),' AND '), concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T23:59:59'''))),') OR ('),pipeline().parameters.where_2),'BETWEEN '),concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T00:00:00'''))),' AND '), concat('''',concat(formatDateTime(variables('trigger_time'), 'yyyy-MM-dd'),'T23:59:59'''))),')')}",
 								"type": "Expression"
 							}
 						}
@@ -735,10 +317,7 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SFPD_restapi_raw')]",
-				"[concat(variables('factoryId'), '/datasets/SFPD_response_raw')]",
-				"[concat(variables('factoryId'), '/datasets/SFPD_log_template_raw')]",
-				"[concat(variables('factoryId'), '/dataflows/01_append_trigger_time_bronze')]",
-				"[concat(variables('factoryId'), '/datasets/SFPD_log_raw')]"
+				"[concat(variables('factoryId'), '/datasets/SFPD_response_raw')]"
 			]
 		},
 		{
@@ -1760,142 +1339,6 @@
 				"[concat(variables('factoryId'), '/datasets/SFPD_log_template_silver')]",
 				"[concat(variables('factoryId'), '/datasets/SFPD_log_silver')]",
 				"[concat(variables('factoryId'), '/linkedServices/dls_socrata_api')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/current_datetime_OLD')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "OLD"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "SFPD_log_raw",
-								"type": "DatasetReference"
-							},
-							"name": "LogSource"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "SFPD_log_raw",
-								"type": "DatasetReference"
-							},
-							"name": "loadLoad"
-						}
-					],
-					"transformations": [
-						{
-							"name": "currentdatetime"
-						},
-						{
-							"name": "union1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          processing_mode as string,",
-						"          insert_datetime as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> LogSource",
-						"LogSource derive(processing_mode = toString('FULL LOAD'),",
-						"          insert_datetime = concat(concat(concat(toString(currentTimestamp(), 'yyyy-MM-dd', 'UTC', 'en-US'),'T'),toString(currentTimestamp(), 'HH:mm:ss.SSSSSSS', 'UTC', 'en-US')),'Z')) ~> currentdatetime",
-						"currentdatetime, LogSource union(byName: true)~> union1",
-						"union1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          processing_mode as string,",
-						"          insert_datetime as string",
-						"     ),",
-						"     partitionFileNames:['ingestion_api_socrata.log'],",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     partitionBy('hash', 1)) ~> loadLoad"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SFPD_log_raw')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/max_datetime_OLD')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"folder": {
-					"name": "OLD"
-				},
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "SFPD_log_raw",
-								"type": "DatasetReference"
-							},
-							"name": "source1"
-						}
-					],
-					"sinks": [
-						{
-							"name": "sink1"
-						}
-					],
-					"transformations": [
-						{
-							"name": "sort1"
-						},
-						{
-							"name": "rank1"
-						},
-						{
-							"name": "filter1"
-						},
-						{
-							"name": "select1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          processing_mode as string,",
-						"          insert_datetime as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     ignoreNoFilesFound: false) ~> source1",
-						"source1 sort(desc(insert_datetime, false)) ~> sort1",
-						"sort1 rank(desc(insert_datetime, true),",
-						"     output(insert_datetime_rank as long)) ~> rank1",
-						"rank1 filter(insert_datetime_rank == 1) ~> filter1",
-						"filter1 select(mapColumn(",
-						"          insert_datetime",
-						"     ),",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> select1",
-						"select1 sink(validateSchema: false,",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     store: 'cache',",
-						"     format: 'inline',",
-						"     output: true,",
-						"     saveOrder: 1) ~> sink1"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SFPD_log_raw')]"
 			]
 		}
 	]
