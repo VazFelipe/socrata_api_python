@@ -83,8 +83,6 @@
 						"type": "SetVariable",
 						"dependsOn": [],
 						"policy": {
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
 							"secureInput": false
 						},
@@ -220,8 +218,6 @@
 							}
 						],
 						"policy": {
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
 							"secureOutput": false,
 							"secureInput": false
 						},
@@ -1273,7 +1269,9 @@
 						"          analysis_neighborhood_derived = toString(iifNull(toString(analysis_neighborhood), 'Not applicable', toString(analysis_neighborhood))),",
 						"          supervisor_district_derived = toString(iifNull(supervisor_district, 0, supervisor_district)),",
 						"          supervisor_district_2012_derived = toString(iifNull(supervisor_district_2012, 0, supervisor_district_2012)),",
-						"          filed_online_derived = toBoolean(iifNull(toString(filed_online), toString('false'), toString(filed_online)))) ~> validations",
+						"          filed_online_derived = toBoolean(iifNull(toString(filed_online), toString('false'), toString(filed_online))),",
+						"          yyyymmdd = replace(left(incident_datetime, 7),'-',''),",
+						"          hhmm = replace(left(right(incident_datetime, 12),5),':','')) ~> validations",
 						"unionWatermarkToLog sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
@@ -1300,6 +1298,8 @@
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true,",
 						"     mapColumn(",
+						"          yyyymmdd,",
+						"          hhmm,",
 						"          {:created_at},",
 						"          {:id},",
 						"          {:updated_at},",
