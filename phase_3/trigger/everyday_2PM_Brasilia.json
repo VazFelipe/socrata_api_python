@@ -2,7 +2,7 @@
 	"name": "everyday_2PM_Brasilia",
 	"properties": {
 		"annotations": [],
-		"runtimeState": "Started",
+		"runtimeState": "Stopped",
 		"pipelines": [
 			{
 				"pipelineReference": {
