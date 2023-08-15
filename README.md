@@ -1,5 +1,8 @@
 # Personal Project: Data Engineering Lifecycle
 
+- This project was stopped for review Data Engineering concepts and learn programming in CS50 by Harvard University
+- Thanks to Rafael Lima (https://www.linkedin.com/in/lsrafael/) for mentoring me
+
 ## Contents
 
 - [The San Francisco Police Department dataset](#the-police-department-incident-reports)
@@ -26,8 +29,8 @@ _"The San Francisco Police Department’s (SFPD) Incident Report Datatset is one
 
 - I'm using Python as language and Cloud Platforms like Google Cloud and Azure
 - Basically, I'm requesting data from API and storage it on Cloud Storage (Phase 1 and 2) :::**DONE**::: 
-- Then in the Phase 3 I'll start developing on Azure Plarform using the medallion architecture :::**DOING**:::
-- The data layers will be Bronze :::**DONE**::: > Silver :::**DOING**::: > Gold :::**TO DO**:::
+- Then in the Phase 3 I'll start developing on Azure Plarform using the medallion architecture :::**DONE**:::
+- The data layers will be Bronze :::**DONE**::: > Silver :::**DONE**::: > Gold :::**TO DO**:::
 
 ## Ideas behind the scenes
 
